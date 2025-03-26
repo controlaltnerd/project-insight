@@ -25,7 +25,7 @@ CREATE TABLE payroll (
   state_tax DECIMAL(7,2),
   retire_401k DECIMAL(7,2),
   health_care DECIMAL(7,2),
-  empid INT,
+  empid NOT NULL INT,
   FOREIGN KEY (empid) REFERENCES employees(empid)
 );
 
