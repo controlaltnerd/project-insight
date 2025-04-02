@@ -6,4 +6,10 @@ public class EmployeeInfo {
     public static Employee viewEmployeeInfoById(int empId) {
        return EmployeeInfoDAO.getEmployeeInfoById(empId);
     }
+    public static Employee viewEmployeeInfoByName(String Fname, String Lname) {
+        return EmployeeInfoDAO.getEmployeeInfoByName(Fname, Lname);
+     }
+     public static Employee viewEmployeeInfoBySsn(String ssn) {
+        return EmployeeInfoDAO.getEmployeeInfoBySsn(ssn);
+     }
 }

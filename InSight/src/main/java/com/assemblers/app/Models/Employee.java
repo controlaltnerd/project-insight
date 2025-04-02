@@ -1,48 +1,79 @@
 package com.assemblers.app.Models;
-import java.util.Date;
 
 public class Employee {
     private int empid;
     private String Fname;
     private String Lname;
     private String job_title;
-    private Date pay_date;
-    private double earnings;
-    private double fed_tax;
-    private double fed_med;
-    private double fed_SS;
-    private double state_tax;
-    private double retire_401K;
-    private double health_care;
-
-    // Constructor
-    public Employee(int empid, String Fname, String Lname, String job_title, Date pay_date, double earnings,
-                    double fed_tax, double fed_med, double fed_SS, double state_tax, double retire_401K, double health_care) {
+    private String email;
+    private double salary;
+    private String ssn;
+    public Employee(){}
+    public Employee(int empid, String Fname, String Lname, String job_title, String email, double salary, String ssn) {
         this.empid = empid;
         this.Fname = Fname;
         this.Lname = Lname;
         this.job_title = job_title;
-        this.pay_date = pay_date;
-        this.earnings = earnings;
-        this.fed_tax = fed_tax;
-        this.fed_med = fed_med;
-        this.fed_SS = fed_SS;
-        this.state_tax = state_tax;
-        this.retire_401K = retire_401K;
-        this.health_care = health_care;
+        this.email = email;
+        this.salary = salary;
+        this.ssn = ssn;
     }
 
-    // Getters
-    public int getEmpid() { return empid; }
-    public String getFname() { return Fname; }
-    public String getLname() { return Lname; }
-    public String getJobTitle() { return job_title; }
-    public Date getPayDate() { return pay_date; }
-    public double getEarnings() { return earnings; }
-    public double getFedTax() { return fed_tax; }
-    public double getFedMed() { return fed_med; }
-    public double getFedSS() { return fed_SS; }
-    public double getStateTax() { return state_tax; }
-    public double getRetire401K() { return retire_401K; }
-    public double getHealthCare() { return health_care; }
+    // Getters and Setters
+    public int getEmpid() {
+        return empid;
+    }
+
+    public void setEmpid(int empid) {
+        this.empid = empid;
+    }
+
+    public String getFname() {
+        return Fname;
+    }
+
+    public void setFname(String fname) {
+        this.Fname = fname;
+    }
+
+    public String getLname() {
+        return Lname;
+    }
+
+    public void setLname(String lname) {
+        this.Lname = lname;
+    }
+
+    public String getJob_title() {
+        return job_title;
+    }
+
+    public void setJob_title(String job_title) {
+        this.job_title = job_title;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public String getSsn() {
+        return ssn;
+    }
+
+    public void setSsn(String ssn) {
+        this.ssn = ssn;
+    }
 }
+

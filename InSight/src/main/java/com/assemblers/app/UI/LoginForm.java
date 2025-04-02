@@ -145,15 +145,10 @@ public class LoginForm extends JFrame {
         StringBuilder details = new StringBuilder();
         details.append("Employee ID: ").append(employee.getEmpid()).append("\n");
         details.append("Name: ").append(employee.getFname()).append(" ").append(employee.getLname()).append("\n");
-        details.append("Job Title: ").append(employee.getJobTitle()).append("\n");
-        details.append("Pay Date: ").append(employee.getPayDate() != null ? employee.getPayDate().toString() : "N/A").append("\n");
-        details.append("Earnings: ").append(employee.getEarnings()).append("\n");
-        details.append("Federal Tax: ").append(employee.getFedTax()).append("\n");
-        details.append("Federal Medicare: ").append(employee.getFedMed()).append("\n");
-        details.append("Federal Social Security: ").append(employee.getFedSS()).append("\n");
-        details.append("State Tax: ").append(employee.getStateTax()).append("\n");
-        details.append("401K Retirement: ").append(employee.getRetire401K()).append("\n");
-        details.append("Health Care: ").append(employee.getHealthCare()).append("\n");
+        details.append("Job Title: ").append(employee.getJob_title()).append("\n");
+        details.append("Email: ").append(employee.getEmail()).append("\n");
+        details.append("Salary: ").append(employee.getSalary()).append("\n");
+        details.append("SSN: ").append(employee.getSsn()).append("\n");
     
         JOptionPane.showMessageDialog(this, details.toString(), "Employee Details", JOptionPane.INFORMATION_MESSAGE);
 
