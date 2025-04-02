@@ -1,3 +1,7 @@
+/*
+ * THIS IS THE OFFICIAL LOGIN SCREEN
+*/
+package com.assemblers.app.UI;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -10,9 +14,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-public class Login implements ActionListener{
+public class LoginOfficial implements ActionListener{
     JButton button;
-    Login()
+    LoginOfficial()
     {
         JPanel panel = new JPanel();
         JFrame frame = new JFrame();
@@ -52,7 +56,7 @@ public class Login implements ActionListener{
     }
     public static void main(String[] args) 
     {
-        Login app = new Login();
+        LoginOfficial app = new LoginOfficial();
     }
 
     @Override

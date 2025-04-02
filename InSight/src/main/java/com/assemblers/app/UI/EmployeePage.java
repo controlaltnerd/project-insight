@@ -1,3 +1,4 @@
+package com.assemblers.app.UI;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -5,20 +6,20 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
-
+import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-public class EmployeeLogin implements ActionListener{
+public class EmployeePage implements ActionListener{
     JFrame frame;
     JPanel panel1, panel2, query;
     JLabel label, text;
-    JButton[] buttons = JButton[3];
+    JButton[] buttons = new JButton[3];
 
-    EmployeeLogin(){
+    EmployeePage(){
         // Frame setup
         frame = new JFrame("Employee");
         frame.setSize(800, 500);
@@ -59,7 +60,7 @@ public class EmployeeLogin implements ActionListener{
         });
 
         // Creating right panel
-        panel2 = new JPanel(new BorderLayout());
+        panel2 = new JPanel(new GridLayout());
         panel2.setBackground(Color.LIGHT_GRAY); // This was never set
         panel2.setBounds((int)(frame.getSize().width * 0.5), 0, (int)(frame.getSize().width * 0.5), frame.getSize().height);
         
@@ -89,6 +90,9 @@ public class EmployeeLogin implements ActionListener{
         });
 
         frame.setVisible(true);
+    }
+    public static void main(String[] args) {
+        EmployeePage log = new EmployeePage();
     }
     @Override
     public void actionPerformed(ActionEvent e)
