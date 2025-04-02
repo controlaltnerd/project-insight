@@ -156,6 +156,8 @@ public class LoginForm extends JFrame {
         details.append("Health Care: ").append(employee.getHealthCare()).append("\n");
     
         JOptionPane.showMessageDialog(this, details.toString(), "Employee Details", JOptionPane.INFORMATION_MESSAGE);
+
+        //
     }
     
 }
