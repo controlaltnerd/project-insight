@@ -28,7 +28,7 @@ public class LoginForm extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-                    Image backgroundImage = new ImageIcon("../background.png").getImage();
+                    Image backgroundImage = new ImageIcon(getClass().getResource("/background.png")).getImage();
                     g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
                 } catch (Exception e) {
                     e.printStackTrace(); // Handle any exceptions related to image loading
