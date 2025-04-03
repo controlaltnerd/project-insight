@@ -8,6 +8,7 @@ public class EmployeeInfoDAO {
     public static Employee getEmployeeInfoById(int empId) {
         String query = "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
                        "FROM employees e " +
+                       "LEFT JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
                        "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id " +
                        "WHERE e.empid = ?";
         
@@ -63,10 +64,11 @@ public class EmployeeInfoDAO {
     return employeeList;
 }
 public static Employee getEmployeeInfoBySsn(String ssn) {
-    String query = "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
-                   "FROM employees e " +
-                   "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id " +
-                   "WHERE e.SSN = ?";
+    String query =  "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
+                    "FROM employees e " +
+                    "LEFT JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
+                    "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id " +
+                    "WHERE e.SSN = ?";
     
     try (Connection conn = DatabaseAccessHelper.getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -90,10 +92,11 @@ public static Employee getEmployeeInfoBySsn(String ssn) {
     return null;
 }
 public static Employee getEmployeeInfoByName(String Fname, String Lname) {
-    String query = "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
-                   "FROM employees e " +
-                   "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id " +
-                   "WHERE e.Fname = ? AND e.Lname = ?";
+    String query =  "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
+                    "FROM employees e " +
+                    "LEFT JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
+                    "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id " +
+                    "WHERE e.Fname = ? AND e.Lname = ?";
     
     try (Connection conn = DatabaseAccessHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query)) {

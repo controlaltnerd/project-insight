@@ -1,10 +1,17 @@
-//test page
+
+
+
+//this is ONLY FOR MY TESTING PURPOSE. DONOT REFER THIS ONE TO DO ANYTHING
+
+
+
 package com.assemblers.app.UI;
 import javax.swing.*;
-
+import com.assemblers.app.APIController.Report;
 import com.assemblers.app.APIController.EmployeeInfo;
 import com.assemblers.app.APIController.UserLogin;
 import com.assemblers.app.Models.Employee;
+import com.assemblers.app.Models.EmployeePayInfo;
 import com.assemblers.app.Models.User;
 
 import java.awt.*;
@@ -124,10 +131,9 @@ public class LoginForm extends JFrame {
 
         if (user != null) {
             if (user.getRole() == 1) {
-                dispose();
-                openAdminPage();  
+                openEmployeePage(EmployeeInfo.viewEmployeeInfoByName("Charlie","Brown"));
             } else if (user.getRole() == 0) {
-                dispose();
+            
                 openEmployeePage(EmployeeInfo.viewEmployeeInfoById(user.getEmpid()));
             }
         } else {
@@ -136,12 +142,10 @@ public class LoginForm extends JFrame {
         
     }
 
-    private void openAdminPage() {
-        // For now, just show a message (you can later expand it)
-        JOptionPane.showMessageDialog(this, "Welcome Admin! This page is under construction.");
-    }
-
-    private void openEmployeePage(Employee employee) {
+    private void openAdminPage(Employee employee) {
+        if (employee == null){
+            JOptionPane.showMessageDialog(this, "Error");
+        }
         StringBuilder details = new StringBuilder();
         details.append("Employee ID: ").append(employee.getEmpid()).append("\n");
         details.append("Name: ").append(employee.getFname()).append(" ").append(employee.getLname()).append("\n");
@@ -151,8 +155,22 @@ public class LoginForm extends JFrame {
         details.append("SSN: ").append(employee.getSsn()).append("\n");
     
         JOptionPane.showMessageDialog(this, details.toString(), "Employee Details", JOptionPane.INFORMATION_MESSAGE);
-
-        //
     }
+        private void openEmployeePage(Employee employee) {
+            if (employee == null){
+                JOptionPane.showMessageDialog(this, "Error");
+            }
+            StringBuilder details = new StringBuilder();
+            details.append("Employee ID: ").append(employee.getEmpid()).append("\n");
+            details.append("Name: ").append(employee.getFname()).append(" ").append(employee.getLname()).append("\n");
+            details.append("Job Title: ").append(employee.getJob_title()).append("\n");
+            details.append("Email: ").append(employee.getEmail()).append("\n");
+            details.append("Salary: ").append(employee.getSalary()).append("\n");
+            details.append("SSN: ").append(employee.getSsn()).append("\n");
+        
+            JOptionPane.showMessageDialog(this, details.toString(), "Employee Details", JOptionPane.INFORMATION_MESSAGE);
+      //
+        }
+    
     
 }
