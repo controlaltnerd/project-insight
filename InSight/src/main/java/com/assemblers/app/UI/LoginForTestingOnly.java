@@ -12,7 +12,6 @@ import javax.swing.table.DefaultTableModel;
 import com.assemblers.app.APIController.Report;
 import com.assemblers.app.APIController.EmployeeInfo;
 import com.assemblers.app.APIController.UserLogin;
-import com.assemblers.app.DatabaseAccess.ReportDAO;
 import com.assemblers.app.Models.Employee;
 import com.assemblers.app.Models.EmployeePayInfo;
 import com.assemblers.app.Models.User;
@@ -213,9 +212,9 @@ public class LoginForTestingOnly extends JFrame {
         // Display the frame
         frame.setVisible(true); */
 //TESTING view total pay by job titles
-/*int jobTitleId = 100;
+/*iint jobTitleId = 100;
         // Get total pay from database
-        float totalPay = ReportDAO.totalPayByJobtitle(jobTitleId);
+        float totalPay = Report.getTotalPayByJobtitle(jobTitleId);
 
         // Create JFrame
         JFrame frame = new JFrame("Total Pay Report");
