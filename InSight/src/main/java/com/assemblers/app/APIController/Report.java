@@ -10,7 +10,7 @@ public class Report {
     public static float getTotalPayByJobtitle(int jobtitle_id){
         return ReportDAO.totalPayByJobtitle(jobtitle_id);
     }
-    public static float getEmployeeReportByDivision(int division_id){
+    public static float getTotalPayByDivision(int division_id){
         return ReportDAO.totalPayByDivision(division_id);
     }
 }

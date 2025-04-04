@@ -244,7 +244,7 @@ public class LoginForTestingOnly extends JFrame {
 //TESTING TOTAL PAY BY DIVISION ID
 /*int div_ID = 123;
         // Get total pay from database
-        float totalPay = ReportDAO.totalPayByDivision(div_ID);
+        float totalPay = Report.GetTotalPayByDivision(div_ID);
 
         // Create JFrame
         JFrame frame = new JFrame("Total Pay Report");
