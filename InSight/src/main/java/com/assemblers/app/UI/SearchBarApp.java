@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -157,17 +159,32 @@ public class SearchBarApp {
 
         // View button action
         viewButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame,
-                    "Employee Info: \n" +
-                            "ID: " + employee.getEmpid() + "\n" +
-                            "Name: " + employee.getFname() + " " + employee.getLname() + "\n" +
-                            "SSN: " + employee.getSsn() + "\n" +
-                            "Job Title: " + employee.getJob_title() + "\n" +
-                            "Email: " + employee.getEmail() + "\n" +
-                            "Salary: " + employee.getSalary(),
-                    "Employee Info", JOptionPane.INFORMATION_MESSAGE);
-        });
+    // Set column headers (field names)
+    String[] columnNames = {"ID", "Name", "SSN", "Job Title", "Email", "Salary"};
+
+    // Set row data (only 1 row)
+    Object[][] data = {
+        {
+            employee.getEmpid(),
+            employee.getFname() + " " + employee.getLname(),
+            employee.getSsn(),
+            employee.getJob_title(),
+            employee.getEmail(),
+            employee.getSalary()
+        }
+    };
+
+    JTable table = new JTable(data, columnNames);
+    table.setEnabled(false); // Make table read-only
+    table.setRowHeight(25);
+
+    JScrollPane scrollPane = new JScrollPane(table);
+    scrollPane.setPreferredSize(new Dimension(600, 70)); // Adjust height for 1 row
+
+    JOptionPane.showMessageDialog(frame, scrollPane, "Employee Info", JOptionPane.INFORMATION_MESSAGE);
+});
     }
+
 
     private void goBackToSearch() {
         searchPanel.setVisible(true); // Show search bar
