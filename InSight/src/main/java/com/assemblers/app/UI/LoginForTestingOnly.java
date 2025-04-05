@@ -8,6 +8,7 @@
 package com.assemblers.app.UI;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import com.assemblers.app.APIController.Report;
 import com.assemblers.app.APIController.EmployeeInfo;
@@ -17,8 +18,10 @@ import com.assemblers.app.Models.EmployeePayInfo;
 import com.assemblers.app.Models.User;
 import com.assemblers.app.APIController.UpdateRangeSalary;
 import java.util.List;
+import com.assemblers.app.APIController.UpdateEmployeeInfo;
 import java.awt.*;
 import java.awt.event.*;
+
 
 public class LoginForTestingOnly extends JFrame {
 
@@ -134,7 +137,7 @@ public class LoginForTestingOnly extends JFrame {
 
         if (user != null) {
             if (user.getRole() == 1) {
-                openAdminPage(user.getEmpid());
+                openAdminPage();
             } else if (user.getRole() == 0) {
                 openEmployeePage(user.getEmpid());
             }
@@ -142,9 +145,133 @@ public class LoginForTestingOnly extends JFrame {
             messageLabel.setText("Invalid username or password.");
         }       
     }
-    private void openAdminPage(int empId) {
-        
+    private void openAdminPage() {
+    JFrame frame = new JFrame("Admin Panel - Employee List");
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.setSize(1000, 500);
+    frame.setLayout(new BorderLayout());
+
+    // Sample data fetching method (you should replace this with your actual DAO)
+    List<Employee> employees = EmployeeInfo.viewAllEmployee();
+
+    // Column names
+    String[] columnNames = {"ID", "First Name", "Last Name", "Job Title", "Email", "Salary", "SSN", "Edit"};
+    
+    // Table model
+    DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
+        public boolean isCellEditable(int row, int column) {
+            return column == 7; // Only Edit button is editable
         }
+    };
+
+    for (Employee emp : employees) {
+        model.addRow(new Object[]{
+            emp.getEmpid(),
+            emp.getFname(),
+            emp.getLname(),
+            emp.getJob_title(),
+            emp.getEmail(),
+            emp.getSalary(),
+            emp.getSsn(),
+            "Edit"
+        });
+    }
+
+    JTable table = new JTable(model);
+    table.getColumn("Edit").setCellRenderer(new ButtonRenderer());
+    table.getColumn("Edit").setCellEditor(new ButtonEditor(new JCheckBox(), model, table));
+
+    JScrollPane scrollPane = new JScrollPane(table);
+    frame.add(scrollPane, BorderLayout.CENTER);
+    frame.setVisible(true);
+}
+
+// Renderer for Edit button
+class ButtonRenderer extends JButton implements TableCellRenderer {
+    public ButtonRenderer() {
+        setText("Edit");
+    }
+
+    public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+        return this;
+    }
+}
+
+// Editor for Edit button
+class ButtonEditor extends DefaultCellEditor {
+    private JButton button;
+    private JTable table;
+    private DefaultTableModel model;
+    private int row;
+
+    public ButtonEditor(JCheckBox checkBox, DefaultTableModel model, JTable table) {
+        super(checkBox);
+        this.model = model;
+        this.table = table;
+        button = new JButton("Edit");
+
+        button.addActionListener(e -> openEditDialog(row));
+    }
+
+    public Component getTableCellEditorComponent(JTable table, Object value,
+            boolean isSelected, int row, int column) {
+        this.row = row;
+        return button;
+    }
+
+    private void openEditDialog(int row) {
+        JDialog dialog = new JDialog((Frame) null, "Edit Employee", true);
+        dialog.setSize(400, 400);
+        dialog.setLayout(new GridLayout(8, 2));
+
+        JTextField fnameField = new JTextField(model.getValueAt(row, 1).toString());
+        JTextField lnameField = new JTextField(model.getValueAt(row, 2).toString());
+        JTextField jobTitleField = new JTextField(model.getValueAt(row, 3).toString());
+        JTextField emailField = new JTextField(model.getValueAt(row, 4).toString());
+        JTextField salaryField = new JTextField(model.getValueAt(row, 5).toString());
+        JTextField ssnField = new JTextField(model.getValueAt(row, 6).toString());
+
+        dialog.add(new JLabel("First Name:")); dialog.add(fnameField);
+        dialog.add(new JLabel("Last Name:")); dialog.add(lnameField);
+        dialog.add(new JLabel("Job Title:")); dialog.add(jobTitleField);
+        dialog.add(new JLabel("Email:")); dialog.add(emailField);
+        dialog.add(new JLabel("Salary:")); dialog.add(salaryField);
+        dialog.add(new JLabel("SSN:")); dialog.add(ssnField);
+
+        JButton saveBtn = new JButton("Save");
+        saveBtn.addActionListener(e -> {
+            int empId = Integer.parseInt(model.getValueAt(row, 0).toString());
+            Employee updated = new Employee(
+                empId,
+                fnameField.getText(),
+                lnameField.getText(),
+                jobTitleField.getText(),
+                emailField.getText(),
+                Double.parseDouble(salaryField.getText()),
+                ssnField.getText()
+            );
+
+            // Update in DB
+            UpdateEmployeeInfo.updateInfo(updated);
+
+            // Update table
+            model.setValueAt(updated.getFname(), row, 1);
+            model.setValueAt(updated.getLname(), row, 2);
+            model.setValueAt(updated.getJob_title(), row, 3);
+            model.setValueAt(updated.getEmail(), row, 4);
+            model.setValueAt(updated.getSalary(), row, 5);
+            model.setValueAt(updated.getSsn(), row, 6);
+
+            dialog.dispose();
+        });
+
+        dialog.add(new JLabel()); // empty label for spacing
+        dialog.add(saveBtn);
+        dialog.setVisible(true);
+    }
+}
+
     private void openEmployeePage(int empId) {
         }
 //TESTING UPDATE RANGE SALARY UpdateRangeSalary.updateRangeSalary(15000, 17000, 10);

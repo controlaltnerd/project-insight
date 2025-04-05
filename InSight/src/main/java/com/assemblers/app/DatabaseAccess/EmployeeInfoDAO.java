@@ -34,9 +34,10 @@ public class EmployeeInfoDAO {
         return null;
     }
     public static List<Employee> viewAllEmployeeInfo() {
-    String query = "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.HireDate, e.Salary, e.SSN " +
-                   "FROM employees e " +
-                   "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id";
+    String query = "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
+                    "FROM employees e " +
+                    "LEFT JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
+                    "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id";
     
     List<Employee> employeeList = new ArrayList<>();
     
