@@ -251,19 +251,24 @@ class ButtonEditor extends DefaultCellEditor {
                 Double.parseDouble(salaryField.getText()),
                 ssnField.getText()
             );
-
+        
             // Update in DB
-            UpdateEmployeeInfo.updateInfo(updated);
-
-            // Update table
-            model.setValueAt(updated.getFname(), row, 1);
-            model.setValueAt(updated.getLname(), row, 2);
-            model.setValueAt(updated.getJob_title(), row, 3);
-            model.setValueAt(updated.getEmail(), row, 4);
-            model.setValueAt(updated.getSalary(), row, 5);
-            model.setValueAt(updated.getSsn(), row, 6);
-
-            dialog.dispose();
+            int rowUpdates = UpdateEmployeeInfo.updateInfo(updated);
+        
+            if (rowUpdates > 0) {
+                // Update table
+                model.setValueAt(updated.getFname(), row, 1);
+                model.setValueAt(updated.getLname(), row, 2);
+                model.setValueAt(updated.getJob_title(), row, 3);
+                model.setValueAt(updated.getEmail(), row, 4);
+                model.setValueAt(updated.getSalary(), row, 5);
+                model.setValueAt(updated.getSsn(), row, 6);
+        
+                JOptionPane.showMessageDialog(dialog, "Employee updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                dialog.dispose();
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Update failed. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         dialog.add(new JLabel()); // empty label for spacing

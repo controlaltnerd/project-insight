@@ -3,7 +3,7 @@ package com.assemblers.app.APIController;
 import com.assemblers.app.Models.Employee;
 import com.assemblers.app.DatabaseAccess.UpdateEmployeeInfoDAO;
 public class UpdateEmployeeInfo {
-    public static void updateInfo(Employee employee){
-        UpdateEmployeeInfoDAO.UpdateEmployeeInfo(employee);
+    public static int updateInfo(Employee employee){
+        return UpdateEmployeeInfoDAO.UpdateEmployeeInfo(employee);
     }
 }
