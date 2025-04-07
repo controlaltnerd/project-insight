@@ -4,7 +4,7 @@ import com.assemblers.app.DatabaseAccess.ReportDAO;
 import com.assemblers.app.Models.EmployeePayInfo;
 import java.util.List;
 public class Report {
-    public static List<EmployeePayInfo> getEmployeePayReport(int empId){
+    public static List<EmployeePayInfo> getEmployeePayByEmpid(int empId){
         return ReportDAO.employeePayInfoById(empId);
     }
     public static float getTotalPayByJobtitle(int jobtitle_id){

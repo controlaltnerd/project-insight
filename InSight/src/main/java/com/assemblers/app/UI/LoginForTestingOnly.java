@@ -13,6 +13,7 @@ import javax.swing.table.TableCellRenderer;
 import com.assemblers.app.APIController.Report;
 import com.assemblers.app.APIController.EmployeeInfo;
 import com.assemblers.app.APIController.UserLogin;
+import com.assemblers.app.APIController.AddEmployee;
 import com.assemblers.app.Models.Employee;
 import com.assemblers.app.Models.EmployeePayInfo;
 import com.assemblers.app.Models.User;
@@ -146,7 +147,212 @@ public class LoginForTestingOnly extends JFrame {
         }       
     }
     private void openAdminPage() {
-    JFrame frame = new JFrame("Admin Panel - Employee List");
+        JFrame frame = new JFrame("Add Employee");
+    frame.setSize(400, 500);
+    frame.setLocationRelativeTo(null);
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.setLayout(new GridLayout(9, 2, 10, 10));
+
+    // Form fields
+    JTextField empIdField = new JTextField();
+    JTextField fnameField = new JTextField();
+    JTextField lnameField = new JTextField();
+    JTextField emailField = new JTextField();
+    JTextField salaryField = new JTextField();
+    JTextField ssnField = new JTextField();
+
+    String[] jobTitles = {
+        "Software Manager", "Software Architect", "Software Engineer", "Software Developer",
+        "Marketing Manager", "Marketing Associate", "Marketing Assistant",
+        "HR Manager", "HR Analyst",
+        "Chief Executive Officer", "Chief Financial Officer", "Chief Information Officer"
+    };
+    JComboBox<String> jobTitleComboBox = new JComboBox<>(jobTitles);
+
+    // Buttons
+    JButton saveBtn = new JButton("Save");
+    JButton cancelBtn = new JButton("Cancel");
+
+    // Add components to the frame
+    frame.add(new JLabel("Employee ID:"));
+    frame.add(empIdField);
+    frame.add(new JLabel("First Name:"));
+    frame.add(fnameField);
+    frame.add(new JLabel("Last Name:"));
+    frame.add(lnameField);
+    frame.add(new JLabel("Email:"));
+    frame.add(emailField);
+    frame.add(new JLabel("Salary:"));
+    frame.add(salaryField);
+    frame.add(new JLabel("SSN:"));
+    frame.add(ssnField);
+    frame.add(new JLabel("Job Title:"));
+    frame.add(jobTitleComboBox);
+    frame.add(saveBtn);
+    frame.add(cancelBtn);
+
+    // Save button action
+    saveBtn.addActionListener(e -> {
+        try {
+            int empId = Integer.parseInt(empIdField.getText().trim());
+            String fname = fnameField.getText().trim();
+            String lname = lnameField.getText().trim();
+            String email = emailField.getText().trim();
+            double salary = Double.parseDouble(salaryField.getText().trim());
+            String ssn = ssnField.getText().trim();
+            String jobTitle = (String) jobTitleComboBox.getSelectedItem();
+
+            Employee newEmp = new Employee(empId, fname, lname, jobTitle, email, salary, ssn);
+
+            int result = AddEmployee.addNewEmployee(newEmp);
+            if (result == 1) {
+                JOptionPane.showMessageDialog(frame, "Employee added successfully!");
+                frame.dispose();
+            } else {
+                JOptionPane.showMessageDialog(frame, "Failed to add employee.");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "Invalid input. Please check your entries.");
+        }
+    });
+
+    // Cancel button action
+    cancelBtn.addActionListener(e -> frame.dispose());
+
+    frame.setVisible(true);
+    }
+
+    private void openEmployeePage(int empId) {
+            
+        }
+//TESTING UPDATE RANGE SALARY UpdateRangeSalary.updateRangeSalary(15000, 17000, 10);
+//TESTING EMPLOYEE PAY INFO
+/*List<EmployeePayInfo> payInfoList = Report.EmployeeReport(empId);
+
+        if (payInfoList == null || payInfoList.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No payroll records found for Employee ID: " + empId,
+                    "No Data", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Get employee details from first record
+        EmployeePayInfo firstRecord = payInfoList.get(0);
+        String fullName = firstRecord.getFname() + " " + firstRecord.getLname();
+
+        // Create label for Employee info
+        JLabel titleLabel = new JLabel("Pay Report for: " + fullName + " (Emp ID: " + empId + ")", JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+        // Define table columns
+        String[] columns = {"Pay Date", "Earnings", "Federal Tax", "Medicare", "Social Security",
+                            "State Tax", "401K Retirement", "Health Care"};
+
+        // Create table model
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+
+        // Populate table with employee pay data
+        for (EmployeePayInfo payInfo : payInfoList) {
+            Object[] row = {
+                    payInfo.getPayDate(),
+                    payInfo.getEarning(),
+                    payInfo.getFed_tax(),
+                    payInfo.getFed_med(),
+                    payInfo.getFed_SS(),
+                    payInfo.getState_tax(),
+                    payInfo.getRetire_401K(),
+                    payInfo.getHealth_care()
+            };
+            tableModel.addRow(row);
+        }
+
+        // Create JTable
+        JTable table = new JTable(tableModel);
+        table.setEnabled(false);
+        table.setRowHeight(25);
+
+        // Scroll pane for table
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        // Create a frame
+        JFrame frame = new JFrame("Employee Payroll Information");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(800, 400);
+        frame.setLocationRelativeTo(null);
+
+        // Create a panel to hold label and table
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(titleLabel, BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        // Add panel to frame
+        frame.add(panel);
+
+        // Display the frame
+        frame.setVisible(true); */
+//TESTING view total pay by job titles
+/*iint jobTitleId = 100;
+        // Get total pay from database
+        float totalPay = Report.getTotalPayByJobtitle(jobTitleId);
+
+        // Create JFrame
+        JFrame frame = new JFrame("Total Pay Report");
+        frame.setSize(400, 200);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+        // Create panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(2, 1, 10, 10));
+
+        // Create labels
+        JLabel titleLabel = new JLabel("Total Pay for Job Title ID: " + jobTitleId, JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+        JLabel payLabel = new JLabel("$" + totalPay, JLabel.CENTER);
+        payLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        payLabel.setForeground(Color.BLUE);
+
+        // Add components to panel
+        panel.add(titleLabel);
+        panel.add(payLabel);
+
+        // Add panel to frame
+        frame.add(panel);
+        frame.setVisible(true); */
+//TESTING TOTAL PAY BY DIVISION ID
+/*int div_ID = 123;
+        // Get total pay from database
+        float totalPay = Report.GetTotalPayByDivision(div_ID);
+
+        // Create JFrame
+        JFrame frame = new JFrame("Total Pay Report");
+        frame.setSize(400, 200);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+        // Create panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(2, 1, 10, 10));
+
+        // Create labels
+        JLabel titleLabel = new JLabel("Total Pay for Division ID: " + div_ID, JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+        JLabel payLabel = new JLabel("$" + totalPay, JLabel.CENTER);
+        payLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        payLabel.setForeground(Color.BLUE);
+
+        // Add components to panel
+        panel.add(titleLabel);
+        panel.add(payLabel);
+
+        // Add panel to frame
+        frame.add(panel);
+        frame.setVisible(true); */
+
+//TESTING VIEW ALL EMPLOYEE AND EDIT SAVE
+/*JFrame frame = new JFrame("Admin Panel - Employee List");
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.setSize(1000, 500);
     frame.setLayout(new BorderLayout());
@@ -274,133 +480,120 @@ class ButtonEditor extends DefaultCellEditor {
         dialog.add(new JLabel()); // empty label for spacing
         dialog.add(saveBtn);
         dialog.setVisible(true);
+     } */
+//TESTING VIEW EMPLOYEE INFO
+/*Employee employee = EmployeeInfo.viewEmployeeInfoByDOB("12-01-1990");
+    
+    if (employee == null) {
+        JOptionPane.showMessageDialog(null, "Employee not found.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
     }
-}
 
-    private void openEmployeePage(int empId) {
+    JFrame frame = new JFrame("Employee Details");
+    frame.setSize(600, 300);
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+
+    String[] columnNames = {"Field", "Value"};
+    String[][] data = {
+        {"Employee ID", String.valueOf(employee.getEmpid())},
+        {"First Name", employee.getFname()},
+        {"Last Name", employee.getLname()},
+        {"Job Title", employee.getJob_title()},
+        {"Email", employee.getEmail()},
+        {"Salary", String.valueOf(employee.getSalary())},
+        {"SSN", employee.getSsn()}
+    };
+
+    JTable table = new JTable(data, columnNames) {
+        public boolean isCellEditable(int row, int column) {
+            return false;
         }
-//TESTING UPDATE RANGE SALARY UpdateRangeSalary.updateRangeSalary(15000, 17000, 10);
-//TESTING EMPLOYEE PAY INFO
-/*List<EmployeePayInfo> payInfoList = Report.EmployeeReport(empId);
+    };
+    table.setRowHeight(30);
+    table.setFont(new Font("SansSerif", Font.PLAIN, 14));
+    table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
 
-        if (payInfoList == null || payInfoList.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No payroll records found for Employee ID: " + empId,
-                    "No Data", JOptionPane.INFORMATION_MESSAGE);
-            return;
+    JScrollPane scrollPane = new JScrollPane(table);
+    frame.add(scrollPane, BorderLayout.CENTER);
+
+    frame.setLocationRelativeTo(null); // center on screen
+    frame.setVisible(true); */
+
+    //TESTING ADDING NEW EMPLOYEE
+    /*JFrame frame = new JFrame("Add Employee");
+    frame.setSize(400, 500);
+    frame.setLocationRelativeTo(null);
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.setLayout(new GridLayout(9, 2, 10, 10));
+
+    // Form fields
+    JTextField empIdField = new JTextField();
+    JTextField fnameField = new JTextField();
+    JTextField lnameField = new JTextField();
+    JTextField emailField = new JTextField();
+    JTextField salaryField = new JTextField();
+    JTextField ssnField = new JTextField();
+
+    String[] jobTitles = {
+        "Software Manager", "Software Architect", "Software Engineer", "Software Developer",
+        "Marketing Manager", "Marketing Associate", "Marketing Assistant",
+        "HR Manager", "HR Analyst",
+        "Chief Executive Officer", "Chief Financial Officer", "Chief Information Officer"
+    };
+    JComboBox<String> jobTitleComboBox = new JComboBox<>(jobTitles);
+
+    // Buttons
+    JButton saveBtn = new JButton("Save");
+    JButton cancelBtn = new JButton("Cancel");
+
+    // Add components to the frame
+    frame.add(new JLabel("Employee ID:"));
+    frame.add(empIdField);
+    frame.add(new JLabel("First Name:"));
+    frame.add(fnameField);
+    frame.add(new JLabel("Last Name:"));
+    frame.add(lnameField);
+    frame.add(new JLabel("Email:"));
+    frame.add(emailField);
+    frame.add(new JLabel("Salary:"));
+    frame.add(salaryField);
+    frame.add(new JLabel("SSN:"));
+    frame.add(ssnField);
+    frame.add(new JLabel("Job Title:"));
+    frame.add(jobTitleComboBox);
+    frame.add(saveBtn);
+    frame.add(cancelBtn);
+
+    // Save button action
+    saveBtn.addActionListener(e -> {
+        try {
+            int empId = Integer.parseInt(empIdField.getText().trim());
+            String fname = fnameField.getText().trim();
+            String lname = lnameField.getText().trim();
+            String email = emailField.getText().trim();
+            double salary = Double.parseDouble(salaryField.getText().trim());
+            String ssn = ssnField.getText().trim();
+            String jobTitle = (String) jobTitleComboBox.getSelectedItem();
+
+            Employee newEmp = new Employee(empId, fname, lname, jobTitle, email, salary, ssn);
+
+            int result = AddEmployee.addEmployee(newEmp);
+            if (result == 1) {
+                JOptionPane.showMessageDialog(frame, "Employee added successfully!");
+                frame.dispose();
+            } else {
+                JOptionPane.showMessageDialog(frame, "Failed to add employee.");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "Invalid input. Please check your entries.");
         }
+    });
 
-        // Get employee details from first record
-        EmployeePayInfo firstRecord = payInfoList.get(0);
-        String fullName = firstRecord.getFname() + " " + firstRecord.getLname();
+    // Cancel button action
+    cancelBtn.addActionListener(e -> frame.dispose());
 
-        // Create label for Employee info
-        JLabel titleLabel = new JLabel("Pay Report for: " + fullName + " (Emp ID: " + empId + ")", JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+    frame.setVisible(true); */
 
-        // Define table columns
-        String[] columns = {"Pay Date", "Earnings", "Federal Tax", "Medicare", "Social Security",
-                            "State Tax", "401K Retirement", "Health Care"};
-
-        // Create table model
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
-
-        // Populate table with employee pay data
-        for (EmployeePayInfo payInfo : payInfoList) {
-            Object[] row = {
-                    payInfo.getPayDate(),
-                    payInfo.getEarning(),
-                    payInfo.getFed_tax(),
-                    payInfo.getFed_med(),
-                    payInfo.getFed_SS(),
-                    payInfo.getState_tax(),
-                    payInfo.getRetire_401K(),
-                    payInfo.getHealth_care()
-            };
-            tableModel.addRow(row);
-        }
-
-        // Create JTable
-        JTable table = new JTable(tableModel);
-        table.setEnabled(false);
-        table.setRowHeight(25);
-
-        // Scroll pane for table
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        // Create a frame
-        JFrame frame = new JFrame("Employee Payroll Information");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(800, 400);
-        frame.setLocationRelativeTo(null);
-
-        // Create a panel to hold label and table
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(titleLabel, BorderLayout.NORTH);
-        panel.add(scrollPane, BorderLayout.CENTER);
-
-        // Add panel to frame
-        frame.add(panel);
-
-        // Display the frame
-        frame.setVisible(true); */
-//TESTING view total pay by job titles
-/*iint jobTitleId = 100;
-        // Get total pay from database
-        float totalPay = Report.getTotalPayByJobtitle(jobTitleId);
-
-        // Create JFrame
-        JFrame frame = new JFrame("Total Pay Report");
-        frame.setSize(400, 200);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-
-        // Create panel
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 1, 10, 10));
-
-        // Create labels
-        JLabel titleLabel = new JLabel("Total Pay for Job Title ID: " + jobTitleId, JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
-
-        JLabel payLabel = new JLabel("$" + totalPay, JLabel.CENTER);
-        payLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        payLabel.setForeground(Color.BLUE);
-
-        // Add components to panel
-        panel.add(titleLabel);
-        panel.add(payLabel);
-
-        // Add panel to frame
-        frame.add(panel);
-        frame.setVisible(true); */
-//TESTING TOTAL PAY BY DIVISION ID
-/*int div_ID = 123;
-        // Get total pay from database
-        float totalPay = Report.GetTotalPayByDivision(div_ID);
-
-        // Create JFrame
-        JFrame frame = new JFrame("Total Pay Report");
-        frame.setSize(400, 200);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-
-        // Create panel
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 1, 10, 10));
-
-        // Create labels
-        JLabel titleLabel = new JLabel("Total Pay for Division ID: " + div_ID, JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
-
-        JLabel payLabel = new JLabel("$" + totalPay, JLabel.CENTER);
-        payLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        payLabel.setForeground(Color.BLUE);
-
-        // Add components to panel
-        panel.add(titleLabel);
-        panel.add(payLabel);
-
-        // Add panel to frame
-        frame.add(panel);
-        frame.setVisible(true); */
 }

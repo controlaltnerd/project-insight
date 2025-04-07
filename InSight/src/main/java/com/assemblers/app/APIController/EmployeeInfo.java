@@ -16,4 +16,7 @@ public class EmployeeInfo {
    public static List <Employee> viewAllEmployee() {
       return EmployeeInfoDAO.viewAllEmployeeInfo();
    }
+   /*public static Employee viewEmployeeInfoByDOB(String DOB) {
+      return EmployeeInfoDAO.getEmployeeInfoByDOB(DOB);
+   }*/
 }
