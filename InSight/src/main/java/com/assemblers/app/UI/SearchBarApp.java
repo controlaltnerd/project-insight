@@ -3,6 +3,7 @@ package com.assemblers.app.UI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -189,42 +190,43 @@ public class SearchBarApp {
 
     // View Report button action
     reportButton.addActionListener(e -> {
-        EmployeePayInfo report = Report.report(employee.getEmpid());
-        if (report == null) {
+        List<EmployeePayInfo> reports = Report.getEmployeePayByEmpid(employee.getEmpid());
+    
+        if (reports == null || reports.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "No payroll report found for employee ID: " + employee.getEmpid(), "Report Not Found", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+    
         String[] columnNames = {
             "EmpID", "First Name", "Last Name", "Pay Date", "Earnings", "Fed Tax", "Fed Med", "Fed SS",
             "State Tax", "401k", "Healthcare"
         };
-
-        Object[][] data = {
-            {
-                report.getEmpid(),
-                report.getFname(),
-                report.getLname(),
-                report.getPayDate(),
-                report.getEarning(),
-                report.getFed_tax(),
-                report.getFed_med(),
-                report.getFed_SS(),
-                report.getState_tax(),
-                report.getRetire_401K(),
-                report.getHealth_care()
-            }
-        };
-
+    
+        Object[][] data = new Object[reports.size()][columnNames.length];
+        for (int i = 0; i < reports.size(); i++) {
+            EmployeePayInfo r = reports.get(i);
+            data[i][0] = r.getEmpid();
+            data[i][1] = r.getFname();
+            data[i][2] = r.getLname();
+            data[i][3] = r.getPayDate();
+            data[i][4] = r.getEarning();
+            data[i][5] = r.getFed_tax();
+            data[i][6] = r.getFed_med();
+            data[i][7] = r.getFed_SS();
+            data[i][8] = r.getState_tax();
+            data[i][9] = r.getRetire_401K();
+            data[i][10] = r.getHealth_care();
+        }
+    
         JTable reportTable = new JTable(data, columnNames);
         reportTable.setEnabled(false);
         reportTable.setRowHeight(25);
         JScrollPane reportScrollPane = new JScrollPane(reportTable);
-        reportScrollPane.setPreferredSize(new Dimension(1000, 70));
-
+        reportScrollPane.setPreferredSize(new Dimension(1000, 150));
+    
         JOptionPane.showMessageDialog(frame, reportScrollPane, "Payroll Report", JOptionPane.INFORMATION_MESSAGE);
     });
-}
+    }
 
 
     private void goBackToSearch() {
