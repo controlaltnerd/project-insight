@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import com.assemblers.app.Models.Employee;
 
 public class UpdateEmployeeInfoDAO {
-    public static void UpdateEmployeeInfo(Employee employee){
+    public static int updateEmployeeInfo(Employee employee){
         String query = "UPDATE employees " +
                    "SET Fname = ?, Lname = ?, email = ? , Salary = ?, SSN = ? " +
                    "WHERE empid = ?";
@@ -21,9 +21,10 @@ public class UpdateEmployeeInfoDAO {
         stmt.setDouble(4, employee.getSalary());
         stmt.setString(5, employee.getSsn());
         stmt.setInt(6, employee.getEmpid());
-        
+        return stmt.executeUpdate();
     } catch (SQLException e) {
         e.printStackTrace();
     }
+    return 0;
     }
 }

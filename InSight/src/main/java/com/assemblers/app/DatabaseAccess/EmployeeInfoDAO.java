@@ -34,9 +34,10 @@ public class EmployeeInfoDAO {
         return null;
     }
     public static List<Employee> viewAllEmployeeInfo() {
-    String query = "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.HireDate, e.Salary, e.SSN " +
-                   "FROM employees e " +
-                   "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id";
+    String query = "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
+                    "FROM employees e " +
+                    "LEFT JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
+                    "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id";
     
     List<Employee> employeeList = new ArrayList<>();
     
@@ -120,4 +121,32 @@ public static Employee getEmployeeInfoByName(String Fname, String Lname) {
     }
     return null;
 }
+/*public static Employee getEmployeeInfoByDOB(String DOB) {
+    String query = "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
+                   "FROM employees e " +
+                   "LEFT JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
+                   "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id " +
+                   "WHERE e.empid = ?";
+    
+    try (Connection conn = DatabaseAccessHelper.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, DOB);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            return new Employee(
+                rs.getInt("empid"),
+                rs.getString("Fname"),
+                rs.getString("Lname"),
+                rs.getString("job_title"),
+                rs.getString("email"),
+                rs.getDouble("Salary"),
+                rs.getString("SSN")
+            );
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}*/
 }
