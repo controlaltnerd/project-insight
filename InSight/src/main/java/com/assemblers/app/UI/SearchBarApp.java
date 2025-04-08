@@ -15,7 +15,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import com.assemblers.app.APIController.EmployeeInfo;
+import com.assemblers.app.APIController.Report;
 import com.assemblers.app.Models.Employee;
+import com.assemblers.app.Models.EmployeePayInfo;
 
 public class SearchBarApp {
     private JFrame frame;
@@ -141,49 +143,88 @@ public class SearchBarApp {
     }
 
     private void showEmployeeInfo(Employee employee) {
-        searchPanel.setVisible(false);  // Hide the search bar
-        backButton.setVisible(true);    // Show the back button
+    searchPanel.setVisible(false);  // Hide the search bar
+    backButton.setVisible(true);    // Show the back button
 
-        optionsPanel.removeAll();      // Clear any previous options
+    optionsPanel.removeAll();      // Clear any previous options
 
-        // Create a View button to display employee information
-        JButton viewButton = new JButton("View Employee Info");
-        Dimension buttonSize = new Dimension(150, 40); // Set uniform button size
-        viewButton.setPreferredSize(buttonSize);
+    Dimension buttonSize = new Dimension(150, 40); // Set uniform button size
 
-        // Add the view button to the options panel
-        optionsPanel.add(viewButton);
-        optionsPanel.setVisible(true);   // Show the options panel
-        frame.revalidate();
-        frame.repaint();
+    // View Employee Info button
+    JButton viewButton = new JButton("View Employee Info");
+    viewButton.setPreferredSize(buttonSize);
+    optionsPanel.add(viewButton);
 
-        // View button action
-        viewButton.addActionListener(e -> {
-    // Set column headers (field names)
-    String[] columnNames = {"ID", "Name", "SSN", "Job Title", "Email", "Salary"};
+    // View Report button
+    JButton reportButton = new JButton("View Report");
+    reportButton.setPreferredSize(buttonSize);
+    optionsPanel.add(reportButton);
 
-    // Set row data (only 1 row)
-    Object[][] data = {
-        {
-            employee.getEmpid(),
-            employee.getFname() + " " + employee.getLname(),
-            employee.getSsn(),
-            employee.getJob_title(),
-            employee.getEmail(),
-            employee.getSalary()
+    optionsPanel.setVisible(true);   // Show the options panel
+    frame.revalidate();
+    frame.repaint();
+
+    // View Employee Info button action
+    viewButton.addActionListener(e -> {
+        String[] columnNames = {"ID", "Name", "SSN", "Job Title", "Email", "Salary"};
+        Object[][] data = {
+            {
+                employee.getEmpid(),
+                employee.getFname() + " " + employee.getLname(),
+                employee.getSsn(),
+                employee.getJob_title(),
+                employee.getEmail(),
+                employee.getSalary()
+            }
+        };
+
+        JTable table = new JTable(data, columnNames);
+        table.setEnabled(false);
+        table.setRowHeight(25);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(600, 70));
+
+        JOptionPane.showMessageDialog(frame, scrollPane, "Employee Info", JOptionPane.INFORMATION_MESSAGE);
+    });
+
+    // View Report button action
+    reportButton.addActionListener(e -> {
+        EmployeePayInfo report = Report.report(employee.getEmpid());
+        if (report == null) {
+            JOptionPane.showMessageDialog(frame, "No payroll report found for employee ID: " + employee.getEmpid(), "Report Not Found", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-    };
 
-    JTable table = new JTable(data, columnNames);
-    table.setEnabled(false); // Make table read-only
-    table.setRowHeight(25);
+        String[] columnNames = {
+            "EmpID", "First Name", "Last Name", "Pay Date", "Earnings", "Fed Tax", "Fed Med", "Fed SS",
+            "State Tax", "401k", "Healthcare"
+        };
 
-    JScrollPane scrollPane = new JScrollPane(table);
-    scrollPane.setPreferredSize(new Dimension(600, 70)); // Adjust height for 1 row
+        Object[][] data = {
+            {
+                report.getEmpid(),
+                report.getFname(),
+                report.getLname(),
+                report.getPayDate(),
+                report.getEarning(),
+                report.getFed_tax(),
+                report.getFed_med(),
+                report.getFed_SS(),
+                report.getState_tax(),
+                report.getRetire_401K(),
+                report.getHealth_care()
+            }
+        };
 
-    JOptionPane.showMessageDialog(frame, scrollPane, "Employee Info", JOptionPane.INFORMATION_MESSAGE);
-});
-    }
+        JTable reportTable = new JTable(data, columnNames);
+        reportTable.setEnabled(false);
+        reportTable.setRowHeight(25);
+        JScrollPane reportScrollPane = new JScrollPane(reportTable);
+        reportScrollPane.setPreferredSize(new Dimension(1000, 70));
+
+        JOptionPane.showMessageDialog(frame, reportScrollPane, "Payroll Report", JOptionPane.INFORMATION_MESSAGE);
+    });
+}
 
 
     private void goBackToSearch() {
