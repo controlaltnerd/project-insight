@@ -17,7 +17,7 @@ public class AddEmployeeDAO {
 
         try (Connection conn = DatabaseAccessHelper.getConnection()) {
             conn.setAutoCommit(false); // Start transaction
-
+            int rowUpdates;
             try (PreparedStatement stmt1 = conn.prepareStatement(query1)) {
                 stmt1.setString(1, employee.getFname());
                 stmt1.setString(2, employee.getLname());
@@ -25,7 +25,7 @@ public class AddEmployeeDAO {
                 stmt1.setDouble(4, employee.getSalary());
                 stmt1.setString(5, employee.getSsn());
                 stmt1.setInt(6, employee.getEmpid());
-                stmt1.executeUpdate();
+                rowUpdates = stmt1.executeUpdate();
             }
 
             int jobTitleId = getJobTitleIdByName(conn, employee.getJob_title());
@@ -37,7 +37,7 @@ public class AddEmployeeDAO {
             }
 
             conn.commit();
-            return 1;
+            return rowUpdates;
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;
