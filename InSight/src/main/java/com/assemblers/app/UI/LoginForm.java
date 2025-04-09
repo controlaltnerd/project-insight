@@ -10,12 +10,14 @@ import com.assemblers.app.Models.User;
 import java.awt.*;
 import java.awt.event.*;
 
-public class LoginForm extends JFrame {
+public class LoginForm extends JFrame implements ActionListener{
 
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton;
     private JLabel messageLabel;
+    private CardLayout cardLayout;
+    private JPanel mainPanel, panel;
 
     public LoginForm() {
         setTitle("Login Form");
@@ -24,7 +26,11 @@ public class LoginForm extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        JPanel panel = new JPanel() {
+        cardLayout = new CardLayout();
+
+        mainPanel = new JPanel(cardLayout);
+
+        panel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
@@ -35,6 +41,7 @@ public class LoginForm extends JFrame {
                 }
             }
         };
+
         panel.setLayout(null);
 
         JLabel welcomeLabel = new JLabel("Welcome!");
@@ -106,7 +113,12 @@ public class LoginForm extends JFrame {
         createAccountButton.setFocusPainted(false);
         createAccountButton.setFont(new Font("Monospaced", Font.PLAIN, 12));
         panel.add(createAccountButton);
-        add(panel);
+
+        EmployeePage workerPage = new EmployeePage(this);
+        mainPanel.add(panel, "Login Screen");
+        mainPanel.add(workerPage, "Employee Page");
+
+        add(mainPanel);
         setVisible(true);
         // Login button action
         loginButton.addActionListener(new ActionListener() {
@@ -128,6 +140,7 @@ public class LoginForm extends JFrame {
                 openAdminPage();  
             } else if (user.getRole() == 0) {
                 dispose();
+                cardLayout.show(mainPanel, "Employee Page");
                 openEmployeePage(EmployeeInfo.viewEmployeeInfoById(user.getEmpid()));
             }
         } else {
@@ -157,7 +170,18 @@ public class LoginForm extends JFrame {
     
         JOptionPane.showMessageDialog(this, details.toString(), "Employee Details", JOptionPane.INFORMATION_MESSAGE);
 
-        //
+        // Switch to employee page
+        cardLayout.show(panel, "Employee Page");
+        
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        // if (e.getSource() == loginButton){
+        //     System.out.println("Page Switch");
+        //     cardLayout.show(panel, "Employee Page");
+        // }
     }
     
 }
