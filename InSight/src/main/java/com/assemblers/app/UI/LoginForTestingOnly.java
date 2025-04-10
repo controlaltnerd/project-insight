@@ -24,12 +24,15 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class LoginForTestingOnly extends JFrame {
+public class LoginForTestingOnly extends JFrame  implements ActionListener{
 
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton;
     private JLabel messageLabel;
+    private JPanel mainLayout;
+    private CardLayout cardLayout;
+    private EmployeePage empPage;
 
     public LoginForTestingOnly() {
         setTitle("Login Form");
@@ -38,6 +41,8 @@ public class LoginForTestingOnly extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
+        cardLayout = new CardLayout();
+        mainLayout = new JPanel(cardLayout);
         JPanel panel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -120,7 +125,11 @@ public class LoginForTestingOnly extends JFrame {
         createAccountButton.setFocusPainted(false);
         createAccountButton.setFont(new Font("Monospaced", Font.PLAIN, 12));
         panel.add(createAccountButton);
-        add(panel);
+
+        mainLayout.add(panel, "Login");
+        empPage = new EmployeePage(this);
+        mainLayout.add(empPage, "Employee Page");
+        add(mainLayout);
         setVisible(true);
         // Login button action
         loginButton.addActionListener(new ActionListener() {
@@ -151,8 +160,9 @@ public class LoginForTestingOnly extends JFrame {
     }
 
     private void openEmployeePage(int empId) {
-            
-        }
+        System.out.println("Login Successfull!");
+        cardLayout.show(mainLayout, "Employee Page");        
+    }
 //TESTING UPDATE RANGE SALARY UpdateRangeSalary.updateRangeSalary(15000, 17000, 10);
 //TESTING EMPLOYEE PAY INFO
 /*List<EmployeePayInfo> payInfoList = Report.EmployeeReport(empId);
@@ -277,6 +287,12 @@ public class LoginForTestingOnly extends JFrame {
         // Add panel to frame
         frame.add(panel);
         frame.setVisible(true); */
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+    }
 
 //TESTING VIEW ALL EMPLOYEE AND EDIT SAVE
 /*JFrame frame = new JFrame("Admin Panel - Employee List");
