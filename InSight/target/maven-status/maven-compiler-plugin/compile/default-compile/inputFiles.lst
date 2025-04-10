@@ -1,0 +1,17 @@
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/APIController/EmployeeInfo.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/APIController/Report.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/APIController/UpdateEmployeeInfo.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/APIController/UpdateRangeSalary.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/APIController/UserLogin.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/App.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/DatabaseAccess/DatabaseAccessHelper.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/DatabaseAccess/EmployeeInfoDAO.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/DatabaseAccess/ReportDAO.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/DatabaseAccess/UpdateEmployeeInfoDAO.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/DatabaseAccess/UpdateRangeSalaryDAO.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/DatabaseAccess/UserLoginDAO.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/Models/Employee.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/Models/User.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/UI/EmployeePage.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/UI/LoginForm.java
+/Users/cwhite/git/project-insight/InSight/src/main/java/com/assemblers/app/UI/LoginOfficial.java
