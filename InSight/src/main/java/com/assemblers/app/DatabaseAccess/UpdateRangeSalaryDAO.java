@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class UpdateRangeSalaryDAO {
-    public static int updateRangeSalary(int min, int max, int increment){
+    public static int updateRangeSalary(double min, double max, double increment){
         String query = "UPDATE employees " +
                    "SET Salary = Salary + Salary * ? / 100 " +
                    "WHERE Salary BETWEEN ? AND ?";
@@ -13,9 +13,9 @@ public class UpdateRangeSalaryDAO {
     try (Connection conn = DatabaseAccessHelper.getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
         
-        stmt.setInt(1, increment);
-        stmt.setInt(2, min);
-        stmt.setInt(3, max);
+        stmt.setDouble(1, increment);
+        stmt.setDouble(2, min);
+        stmt.setDouble(3, max);
 
         int rowsUpdated = stmt.executeUpdate();
         return rowsUpdated;
