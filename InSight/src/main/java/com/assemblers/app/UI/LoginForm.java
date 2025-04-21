@@ -26,10 +26,6 @@ public class LoginForm extends JFrame implements ActionListener{
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        cardLayout = new CardLayout();
-
-        mainPanel = new JPanel(cardLayout);
-
         panel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -141,7 +137,7 @@ public class LoginForm extends JFrame implements ActionListener{
             } else if (user.getRole() == 0) {
                 dispose();
                 cardLayout.show(mainPanel, "Employee Page");
-                openEmployeePage(EmployeeInfo.viewEmployeeInfoById(user.getEmpid()));
+                //openEmployeePage(EmployeeInfo.viewEmployeeInfoById(user.getEmpid()));
             }
         } else {
             messageLabel.setText("Invalid username or password.");
@@ -154,26 +150,26 @@ public class LoginForm extends JFrame implements ActionListener{
         JOptionPane.showMessageDialog(this, "Welcome Admin! This page is under construction.");
     }
 
-    private void openEmployeePage(Employee employee) {
-        StringBuilder details = new StringBuilder();
-        details.append("Employee ID: ").append(employee.getEmpid()).append("\n");
-        details.append("Name: ").append(employee.getFname()).append(" ").append(employee.getLname()).append("\n");
-        details.append("Job Title: ").append(employee.getJobTitle()).append("\n");
-        details.append("Pay Date: ").append(employee.getPayDate() != null ? employee.getPayDate().toString() : "N/A").append("\n");
-        details.append("Earnings: ").append(employee.getEarnings()).append("\n");
-        details.append("Federal Tax: ").append(employee.getFedTax()).append("\n");
-        details.append("Federal Medicare: ").append(employee.getFedMed()).append("\n");
-        details.append("Federal Social Security: ").append(employee.getFedSS()).append("\n");
-        details.append("State Tax: ").append(employee.getStateTax()).append("\n");
-        details.append("401K Retirement: ").append(employee.getRetire401K()).append("\n");
-        details.append("Health Care: ").append(employee.getHealthCare()).append("\n");
+    // private void openEmployeePage(Employee employee) {
+    //     StringBuilder details = new StringBuilder();
+    //     details.append("Employee ID: ").append(employee.getEmpid()).append("\n");
+    //     details.append("Name: ").append(employee.getFname()).append(" ").append(employee.getLname()).append("\n");
+    //     details.append("Job Title: ").append(employee.getJobTitle()).append("\n");
+    //     details.append("Pay Date: ").append(employee.getPayDate() != null ? employee.getPayDate().toString() : "N/A").append("\n");
+    //     details.append("Earnings: ").append(employee.getEarnings()).append("\n");
+    //     details.append("Federal Tax: ").append(employee.getFedTax()).append("\n");
+    //     details.append("Federal Medicare: ").append(employee.getFedMed()).append("\n");
+    //     details.append("Federal Social Security: ").append(employee.getFedSS()).append("\n");
+    //     details.append("State Tax: ").append(employee.getStateTax()).append("\n");
+    //     details.append("401K Retirement: ").append(employee.getRetire401K()).append("\n");
+    //     details.append("Health Care: ").append(employee.getHealthCare()).append("\n");
     
-        JOptionPane.showMessageDialog(this, details.toString(), "Employee Details", JOptionPane.INFORMATION_MESSAGE);
+    //     JOptionPane.showMessageDialog(this, details.toString(), "Employee Details", JOptionPane.INFORMATION_MESSAGE);
 
-        // Switch to employee page
-        cardLayout.show(panel, "Employee Page");
+    //     // Switch to employee page
+    //     cardLayout.show(panel, "Employee Page");
         
-    }
+    // }
 
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -1,20 +1,23 @@
 package com.assemblers.app.UI;
 
 import javax.swing.*;
+
+import com.assemblers.app.APIController.Report;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-public class EmployeePage extends JPanel implements ActionListener {
-    private JPanel panel1, panel2;
-    private JLabel label, text, query;
-    private JButton[] employeeButtons = new JButton[3];
+public class EmployeePage extends JPanel {
+    private JLabel label, text, query, reports;
+    private JButton viewInfo;
+    private int employeeID;
 
-    public EmployeePage(ActionListener listener) {
+    public EmployeePage() {
         // Panel Setup
-        this.setLayout(new BorderLayout());
+        //this.setLayout(new BorderLayout());
 
         // Labels for the left panel
         label = new JLabel("💻");
@@ -24,58 +27,54 @@ public class EmployeePage extends JPanel implements ActionListener {
         text = new JLabel("Welcome [employee_name]!");
         text.setFont(new Font("Helvetica", Font.PLAIN, 15));
 
-        query = new JLabel("Select Which Option You Would Like To View!");
+        query = new JLabel("View Your Personalized Information!");
         query.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
         // Creating the left panel
-        panel1 = new JPanel(null);
-        panel1.setBackground(Color.ORANGE);
-        panel1.setPreferredSize(new Dimension(400, 500));
+        this.setBackground(Color.ORANGE);
+        this.setPreferredSize(new Dimension(400, 500));
 
         label.setBounds(150, 20, label.getPreferredSize().width, label.getPreferredSize().height);
         text.setBounds(120, 60, 200, 20);
         query.setBounds(50, 100, 300, 30);
 
-        panel1.add(label);
-        panel1.add(text);
-        panel1.add(query);
+        this.add(label);
+        this.add(text);
+        this.add(query);
 
         // Keep components centered in the panel
-        panel1.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                int width = panel1.getWidth();
-                label.setBounds((width - label.getPreferredSize().width) / 2, 20, label.getPreferredSize().width, label.getPreferredSize().height);
-                text.setBounds((width - text.getPreferredSize().width) / 2, 60, text.getPreferredSize().width, text.getPreferredSize().height);
-                query.setBounds((width - query.getPreferredSize().width) / 2, 100, query.getPreferredSize().width, query.getPreferredSize().height);
-            }
-        });
 
-        // Creating right panel
-        panel2 = new JPanel(new GridLayout(3, 1, 10, 10));
-        panel2.setBackground(Color.LIGHT_GRAY);
-        panel2.setPreferredSize(new Dimension(400, 500));
 
         // Selection employeeButtons for right panel
-        employeeButtons[0] = new JButton("Salary");
-        employeeButtons[1] = new JButton("DOB");
-        employeeButtons[2] = new JButton("Hours Worked");
+        viewInfo = new JButton("View Report");
 
         // Adding employeeButtons to right panel, also adds action listeners to them
-        for (JButton button : employeeButtons) {
-            button.addActionListener(listener); // Delegate actions to the provided listener
-            button.setFocusable(false);
-            panel2.add(button);
-        }
+        viewInfo.setFocusable(false);
+        viewInfo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                displayInfo();
+            }
+        });
+        this.add(viewInfo);
 
-        // Adding panels to the EmployeePage
-        this.add(panel1, BorderLayout.WEST);
-        this.add(panel2, BorderLayout.CENTER);
+        // View Reports label
+        reports = new JLabel("");
+        this.add(reports);
+    }
+    public void setEmpID(int id)
+    {
+        employeeID = id;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+    public int getEmpID()
+    {
+        return employeeID;
     }
+
+    public void displayInfo()
+    {
+        //reports.setText(Double.toString(Report.getEmployeePayByEmpid(employeeID).getEarning()));
+        System.out.println("Displaying Info");
+    }
+
 }
