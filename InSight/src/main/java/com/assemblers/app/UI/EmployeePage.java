@@ -3,12 +3,11 @@ package com.assemblers.app.UI;
 import javax.swing.*;
 
 import com.assemblers.app.APIController.Report;
+import com.assemblers.app.Models.EmployeePayInfo;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 public class EmployeePage extends JPanel {
     private JLabel label, text, query, reports;
@@ -73,9 +72,14 @@ public class EmployeePage extends JPanel {
 
     public void displayInfo()
     {
-        String reports = "";
+        String rep = "";
         //reports.setText(Double.toString(Report.getEmployeePayByEmpid(employeeID).getEarning()));
-        System.out.println("Displaying Info");
+        for (EmployeePayInfo empPay : Report.getEmployeePayByEmpid(employeeID)) 
+        {
+            rep.concat(empPay.getFname() + " " + empPay.getLname() + "'s earnings is $" + Double.toString(empPay.getEarning()) + '\n');
+        }
+        reports.setText(rep);
+        System.out.println("Displaying Info"); //Debug
     }
 
 }
