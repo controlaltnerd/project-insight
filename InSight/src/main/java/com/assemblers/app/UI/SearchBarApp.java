@@ -81,6 +81,9 @@ public class SearchBarApp {
 
         // Back button action
         backButton.addActionListener(e -> goBackToSearch());
+
+        frame.setVisible(true);
+
     }
 
     private void handleSearch() {

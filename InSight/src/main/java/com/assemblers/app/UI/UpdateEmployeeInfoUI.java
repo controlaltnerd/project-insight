@@ -10,8 +10,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class ViewAllEmployee {
-    public ViewAllEmployee() {
+public class UpdateEmployeeInfoUI {
+    public UpdateEmployeeInfoUI() {
         JFrame frame = new JFrame("Admin Panel - Employee List");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1000, 500);
