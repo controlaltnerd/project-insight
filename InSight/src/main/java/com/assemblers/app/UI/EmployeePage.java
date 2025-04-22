@@ -73,6 +73,7 @@ public class EmployeePage extends JPanel {
 
     public void displayInfo()
     {
+        String reports = "";
         //reports.setText(Double.toString(Report.getEmployeePayByEmpid(employeeID).getEarning()));
         System.out.println("Displaying Info");
     }

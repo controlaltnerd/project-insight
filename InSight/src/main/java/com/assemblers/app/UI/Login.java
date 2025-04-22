@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-public class LoginOfficial extends JFrame {
+public class Login extends JFrame {
     private JButton button;
     private CardLayout cardLayout;
     private JPanel login, mainLayout;
@@ -27,7 +27,7 @@ public class LoginOfficial extends JFrame {
     private JTextField userText;
     private JPasswordField passText;
     
-    public LoginOfficial()
+    public Login()
     {
         login = new JPanel();
         cardLayout = new CardLayout();
