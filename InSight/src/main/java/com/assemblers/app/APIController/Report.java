@@ -13,4 +13,7 @@ public class Report {
     public static float getTotalPayByDivision(int division_id){
         return ReportDAO.totalPayByDivision(division_id);
     }
+    public static List<EmployeePayInfo> getAllEmployeePayInfo(){
+        return ReportDAO.getAllEmployeePayInfo();
+    }
 }

@@ -23,7 +23,7 @@ import com.assemblers.app.APIController.Report;
 import com.assemblers.app.Models.Employee;
 import com.assemblers.app.Models.EmployeePayInfo;
 
-public class SearchBarApp {
+public class SearchUI {
     private JFrame frame;
     private JTextField searchField;
     private JButton searchButton;
@@ -33,7 +33,7 @@ public class SearchBarApp {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
-                SearchBarApp window = new SearchBarApp();
+                SearchUI window = new SearchUI();
                 window.frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -41,7 +41,7 @@ public class SearchBarApp {
         });
     }
 
-    public SearchBarApp() {
+    public SearchUI() {
         frame = new JFrame("Search Employee");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBounds(100, 100, 400, 300);

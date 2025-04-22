@@ -1,87 +1,120 @@
-/*
- * THIS IS THE OFFICIAL LOGIN SCREEN
-*/
 package com.assemblers.app.UI;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
+import javax.swing.*;
 import com.assemblers.app.APIController.UserLogin;
 import com.assemblers.app.Models.User;
-
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
+
 
 public class Login extends JFrame {
-    private JButton button;
-    private CardLayout cardLayout;
-    private JPanel login, mainLayout;
-    private EmployeePage employeePage;
-    private JLabel userLab, passLab, messageLabel;
-    private JTextField userText;
-    private JPasswordField passText;
-    
-    public Login()
-    {
-        login = new JPanel();
-        cardLayout = new CardLayout();
-        mainLayout = new JPanel(cardLayout);
-        employeePage = new EmployeePage();
 
-        setSize(400, 300);
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private JButton loginButton;
+    private JLabel messageLabel;
+
+    public Login() {
+        setTitle("Login Form");
+        setSize(400, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
 
-        login.setLayout(null);
+        JPanel panel = new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    Image backgroundImage = new ImageIcon(getClass().getResource("/background.png")).getImage();
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                } catch (Exception e) {
+                    e.printStackTrace(); // Handle any exceptions related to image loading
+                }
+            }
+        };
+        panel.setLayout(null);
 
-        userLab = new JLabel("User Name: ");
-        userLab.setBounds(10, 20, 80, 25);
-        userText = new JTextField(20);
-        userText.setBounds(100, 20, 165, 25);
+        JLabel welcomeLabel = new JLabel("Welcome!");
+        welcomeLabel.setFont(new Font("Monospaced", Font.BOLD, 24));
+        welcomeLabel.setForeground(Color.WHITE);
+        welcomeLabel.setBounds(150, 180, 250, 30);
+        panel.add(welcomeLabel);
 
-        passLab = new JLabel("Password: ");
-        passLab.setBounds(10, 60, 80, 25);
-        passText = new JPasswordField();
-        passText.setBounds(100, 60, 165, 25);
+        JLabel instructionLabel = new JLabel("Sign in to continue");
+        instructionLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        instructionLabel.setForeground(Color.WHITE);
+        instructionLabel.setBounds(120, 210, 200, 20);
+        panel.add(instructionLabel);
 
-        messageLabel = new JLabel("Enter Username and Password");
-        messageLabel.setBounds(100, 100, 165, 25);
+        usernameField = new JTextField();
+        usernameField.setBounds(50, 320, 300, 40);
+        usernameField.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        usernameField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        usernameField.setBackground(new Color(0, 0, 0, 120));  // Semi-transparent dark background
+        usernameField.setForeground(Color.WHITE);  // White text color
+        usernameField.setCaretColor(Color.WHITE);  // White caret
+        panel.add(usernameField);
 
-        button = new JButton("ENTER");
-        button.setBackground(Color.CYAN);
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Futura", Font.BOLD, 10));
-        button.setBounds(100, 120, 80, 20);
-        button.addActionListener(new ActionListener() {
+        JLabel usernameLabel = new JLabel("Username");
+        usernameLabel.setBounds(50, 295, 100, 20);
+        usernameLabel.setForeground(Color.WHITE);
+        panel.add(usernameLabel);
+
+        // Create a glowing effect for the password field
+        passwordField = new JPasswordField();
+        passwordField.setBounds(50, 390, 300, 40);
+        passwordField.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        passwordField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        passwordField.setBackground(new Color(0, 0, 0, 120));  // Semi-transparent dark background
+        passwordField.setForeground(Color.WHITE);  // White text color
+        passwordField.setCaretColor(Color.WHITE);  // White caret
+        panel.add(passwordField);
+
+        JLabel passwordLabel = new JLabel("Password");
+        passwordLabel.setBounds(50, 365, 100, 20);
+        passwordLabel.setForeground(Color.WHITE);
+        panel.add(passwordLabel);
+
+        loginButton = new JButton("Login");
+        loginButton.setBounds(160, 460, 80, 40);
+        loginButton.setBackground(new Color(70, 130, 180)); // Steel blue color
+        loginButton.setForeground(Color.BLACK);
+        loginButton.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        panel.add(loginButton);
+        
+        messageLabel = new JLabel("", JLabel.CENTER);
+        messageLabel.setFont(new Font("Monospaced", Font.PLAIN, 9));
+        messageLabel.setForeground(Color.RED); // Red color for error messages
+        messageLabel.setBounds(-30, 420, 300, 30);
+        panel.add(messageLabel);
+
+
+        JLabel forgotPasswordLabel = new JLabel("Forgot Password?");
+        forgotPasswordLabel.setBounds(240, 435, 120, 20);
+        forgotPasswordLabel.setForeground(Color.WHITE);
+        forgotPasswordLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        forgotPasswordLabel.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        panel.add(forgotPasswordLabel);
+
+        JButton createAccountButton = new JButton("Create Account");
+        createAccountButton.setBounds(130, 520, 140, 30);
+        createAccountButton.setForeground(Color.BLACK);
+        createAccountButton.setBackground(new Color(70, 130, 180));
+        createAccountButton.setFocusPainted(false);
+        createAccountButton.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        panel.add(createAccountButton);
+        add(panel);
+        setVisible(true);
+        // Login button action
+        loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 loginAction();
             }
         });
-        
-        button.setFocusable(false);
-
-
-        login.add(userLab);
-        login.add(userText);
-        login.add(passLab);
-        login.add(passText);
-        login.add(button);
-
-        mainLayout.add(login, "Login");
-        mainLayout.add(employeePage, "Employee Page");
-
-        add(mainLayout);
-        setVisible(true);
     }
-
+    
     private void loginAction() {
-        String username = userText.getText();
-        String password = new String(passText.getPassword());
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
         
         User user = UserLogin.login(username, password);
 
@@ -96,12 +129,13 @@ public class Login extends JFrame {
         }       
     }
     private void openAdminPage() {
-            
+            new AdminPage();
     }
 
     private void openEmployeePage(int empId) {
-        employeePage.setEmpID(empId);
-        System.out.println("Login Successfull!");
-        cardLayout.show(mainLayout, "Employee Page");        
+        //new EmployeePage(empId);
+    }
+    public static void main(String[] args) {
+        new Login();
     }
 }

@@ -41,13 +41,7 @@ public class AdminPage {
     }
 
     public void openSearchEmployeePage() {
-    SwingUtilities.invokeLater(() -> {
-        try {
-            new SearchBarApp();  // Creates and shows the GUI
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    });
+        new SearchUI();
 }
 
     public void openUpdateEmployeeInfoPage() {
@@ -55,7 +49,7 @@ public class AdminPage {
     }
 
     public void openUpdateSalaryRangePage() {
-       new UpdateSalary();
+       new UpdateSalaryUI();
     }
 
     public void openViewReportPage() {

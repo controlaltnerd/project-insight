@@ -94,4 +94,39 @@ public static float totalPayByDivision(int job_title_id){
 
         return totalPay;
 }
+public static List<EmployeePayInfo> getAllEmployeePayInfo() {
+    String query = "SELECT e.empid, e.Fname, e.Lname, " +
+                   "p.pay_date, p.earnings, p.fed_tax, p.fed_med, p.fed_SS, p.state_tax, p.retire_401k, p.health_care " +
+                   "FROM employees e " +
+                   "LEFT JOIN payroll p ON e.empid = p.empid";
+
+    List<EmployeePayInfo> EmployeePayInfoList = new ArrayList<>();
+
+    try (Connection conn = DatabaseAccessHelper.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            EmployeePayInfo payInfo = new EmployeePayInfo(
+                    rs.getInt("empid"),
+                    rs.getString("Fname"),
+                    rs.getString("Lname"),
+                    rs.getDate("pay_date"),
+                    rs.getDouble("earnings"),
+                    rs.getDouble("fed_tax"),
+                    rs.getDouble("fed_med"),
+                    rs.getDouble("fed_SS"),
+                    rs.getDouble("state_tax"),
+                    rs.getDouble("retire_401k"),
+                    rs.getDouble("health_care")
+            );
+            EmployeePayInfoList.add(payInfo);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return EmployeePayInfoList.isEmpty() ? null : EmployeePayInfoList; // Return null if no records are found
+}
 }

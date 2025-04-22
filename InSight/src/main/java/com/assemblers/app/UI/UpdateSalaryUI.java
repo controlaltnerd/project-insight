@@ -4,13 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import com.assemblers.app.APIController.UpdateRangeSalary;
 
-public class UpdateSalary extends JFrame {
+public class UpdateSalaryUI extends JFrame {
     // Input fields for salary range and percentage
     JTextField minSalaryField, maxSalaryField, percentageField;
     JButton applyButton;
 
     // Constructor to set up the UI
-    public UpdateSalary() {
+    public UpdateSalaryUI() {
         setTitle("Salary Range Update (Admin Only)");
         setSize(400, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,7 +76,7 @@ public class UpdateSalary extends JFrame {
 
 
     public static void main(String[] args) {
-        new UpdateSalary();
+        new UpdateSalaryUI();
     }
 }
 
