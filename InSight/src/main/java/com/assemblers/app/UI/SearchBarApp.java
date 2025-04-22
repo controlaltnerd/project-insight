@@ -18,7 +18,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import com.assemblers.app.APIController.AddEmployee;
 import com.assemblers.app.APIController.EmployeeInfo;
 import com.assemblers.app.APIController.Report;
 import com.assemblers.app.Models.Employee;
@@ -180,12 +179,6 @@ public class SearchBarApp {
         gbc.gridy = 3;
         optionsPanel.add(createSpacingLabel(), gbc);  // Adding a "dummy" component for spacing
 
-        // Add Employee button
-        JButton addButton = new JButton("Add Employee");
-        addButton.setPreferredSize(buttonSize);
-        gbc.gridy = 4;
-        optionsPanel.add(addButton, gbc);
-
         optionsPanel.setVisible(true);   // Show the options panel
         frame.revalidate();
         frame.repaint();
@@ -213,69 +206,6 @@ public class SearchBarApp {
             JOptionPane.showMessageDialog(frame, scrollPane, "Employee Info", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        addButton.addActionListener(e -> {
-            JPanel inputPanel = new JPanel(new FlowLayout());
-
-            JTextField idField = new JTextField(5);
-            JTextField fnameField = new JTextField(10);
-            JTextField lnameField = new JTextField(10);
-            JTextField ssnField = new JTextField(10);
-            JTextField titleField = new JTextField(10); // Must match existing job title in DB
-            JTextField emailField = new JTextField(15);
-            JTextField salaryField = new JTextField(8);
-
-            inputPanel.add(new JLabel("ID:"));
-            inputPanel.add(idField);
-            inputPanel.add(new JLabel("First Name:"));
-            inputPanel.add(fnameField);
-            inputPanel.add(new JLabel("Last Name:"));
-            inputPanel.add(lnameField);
-            inputPanel.add(new JLabel("SSN:"));
-            inputPanel.add(ssnField);
-            inputPanel.add(new JLabel("Job Title:"));
-            inputPanel.add(titleField);
-            inputPanel.add(new JLabel("Email:"));
-            inputPanel.add(emailField);
-            inputPanel.add(new JLabel("Salary:"));
-            inputPanel.add(salaryField);
-
-            int result = JOptionPane.showConfirmDialog(frame, inputPanel, "Add New Employee", JOptionPane.OK_CANCEL_OPTION);
-
-            if (result == JOptionPane.OK_OPTION) {
-                try {
-                    int id = Integer.parseInt(idField.getText().trim());
-                    String fname = fnameField.getText().trim();
-                    String lname = lnameField.getText().trim();
-                    String ssn = ssnField.getText().trim();
-                    String jobTitle = titleField.getText().trim();
-                    String email = emailField.getText().trim();
-                    double salary = Double.parseDouble(salaryField.getText().trim());
-
-                    if (fname.isEmpty() || lname.isEmpty() || ssn.isEmpty() || jobTitle.isEmpty() || email.isEmpty()) {
-                        JOptionPane.showMessageDialog(frame, "Please fill in all fields.", "Warning", JOptionPane.WARNING_MESSAGE);
-                        return;
-                    }
-
-                    Employee newEmp = new Employee(id, fname, lname, jobTitle, email, salary, ssn);
-
-                    int rowsAffected = AddEmployee.addNewEmployee(newEmp);
-
-                    if (rowsAffected > 0) {
-                        JOptionPane.showMessageDialog(frame, "Employee added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "Failed to add employee. Make sure job title exists.", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                } catch (NumberFormatException nfe) {
-                    JOptionPane.showMessageDialog(frame, "Invalid number format for ID or Salary.", "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (IllegalArgumentException iae) {
-                    JOptionPane.showMessageDialog(frame, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(frame, "Unexpected error occurred.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
 
         // View Report button action
         reportButton.addActionListener(e -> {
