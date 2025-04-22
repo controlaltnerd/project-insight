@@ -1,9 +1,10 @@
 package com.assemblers.app.UI;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.GridLayout;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 public class AdminPage {
     private JFrame frame;
@@ -40,10 +41,14 @@ public class AdminPage {
     }
 
     public void openSearchEmployeePage() {
-       //LINK YOUR SEARCH PAGE HERE
-       //I CAN'T CALL it like this
-       new SearchBarApp();
-    }
+    SwingUtilities.invokeLater(() -> {
+        try {
+            new SearchBarApp();  // Creates and shows the GUI
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+}
 
     public void openUpdateEmployeeInfoPage() {
        new UpdateEmployeeInfoUI();
