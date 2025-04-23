@@ -9,7 +9,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class EmployeePage extends JPanel {
+public class EmployeePage extends JFrame {
+    private JPanel empPanel;
     private JLabel label, text, query, reports;
     private JButton viewInfo;
     private int employeeID;
@@ -18,6 +19,12 @@ public class EmployeePage extends JPanel {
         // Panel Setup
         //this.setLayout(new BorderLayout());
         employeeID = empId;
+
+        setTitle("Login Form");
+        setSize(400, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
         // Labels for the left panel
         label = new JLabel("💻");
         label.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 30));
@@ -30,20 +37,19 @@ public class EmployeePage extends JPanel {
         query.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
         // Creating the left panel
-        this.setBackground(Color.ORANGE);
-        this.setPreferredSize(new Dimension(400, 500));
+        empPanel.setBackground(Color.ORANGE);
+        empPanel.setPreferredSize(new Dimension(400, 500));
 
         label.setBounds(150, 20, label.getPreferredSize().width, label.getPreferredSize().height);
         text.setBounds(120, 60, 200, 20);
         query.setBounds(50, 100, 300, 30);
 
-        this.add(label);
-        this.add(text);
-        this.add(query);
+        empPanel.add(label);
+        empPanel.add(text);
+        empPanel.add(query);
 
         // Keep components centered in the panel
-
-
+        
         // Selection employeeButtons for right panel
         viewInfo = new JButton("View Report");
 
@@ -54,11 +60,12 @@ public class EmployeePage extends JPanel {
                 displayInfo();
             }
         });
-        this.add(viewInfo);
+        empPanel.add(viewInfo);
 
         // View Reports label
         reports = new JLabel("");
-        this.add(reports);
+        empPanel.add(reports);
+        add(empPanel);
     }
     public void setEmpID(int id)
     {
