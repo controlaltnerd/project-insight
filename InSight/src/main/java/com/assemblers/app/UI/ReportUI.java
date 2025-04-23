@@ -86,14 +86,14 @@ public class ReportUI {
             int selectedIndex = divisionDropdown.getSelectedIndex();
             int divisionId = divisionIds[selectedIndex];
             String selectedMonth = (String) divisionMonthDropdown.getSelectedItem();
-            viewTotalPayByDivision(divisionId); // You can update to pass selectedMonth later
+            viewTotalPayByDivision(divisionId, selectedMonth); // ✅ updated
         });
     
         jobTitleBtn.addActionListener(e -> {
             int selectedIndex = jobTitleDropdown.getSelectedIndex();
             int jobTitleId = jobTitleIds[selectedIndex];
             String selectedMonth = (String) jobTitleMonthDropdown.getSelectedItem();
-            viewTotalPayByJobtitles(jobTitleId); // You can update to pass selectedMonth later
+            viewTotalPayByJobtitles(jobTitleId,selectedMonth); // You can update to pass selectedMonth later
         });
     
         allPayInfoBtn.addActionListener(e -> viewAllEmployeePayInfo());
@@ -143,13 +143,69 @@ public class ReportUI {
         dialog.setLocationRelativeTo(frame); // Center relative to main frame
         dialog.setVisible(true);
     }
-    public void viewTotalPayByDivision(int division_id) {
-        JOptionPane.showMessageDialog(frame, "Displaying total pay for division ID: " + division_id);
+    public void viewTotalPayByDivision(int division_id, String monthName) {
+        int monthIndex = java.util.Arrays.asList(
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ).indexOf(monthName) + 1;
+    
+        float totalPay = Report.getTotalPayByDivision(division_id, monthIndex);
+    
+        // Find the name of the division by matching the ID
+        String[] divisionNames = {
+            "Technology Engineering", "Marketing", "Human Resources", "HQ"
+        };
+        int[] divisionIds = {123, 345, 456, 567};
+        String divisionName = "Unknown";
+    
+        for (int i = 0; i < divisionIds.length; i++) {
+            if (divisionIds[i] == division_id) {
+                divisionName = divisionNames[i];
+                break;
+            }
+        }
+    
+        JOptionPane.showMessageDialog(frame,
+            "The total pay for " + divisionName + " in " + monthName + " is $" + totalPay);
     }
-
-    public void viewTotalPayByJobtitles(int jobtitle_id) {
-        JOptionPane.showMessageDialog(frame, "Displaying total pay for job title ID: " + jobtitle_id);
-    }
+    
+    public void viewTotalPayByJobtitles(int jobtitle_id, String monthName) {
+        // Convert the month name to the month index (1 for January, 2 for February, etc.)
+        int monthIndex = java.util.Arrays.asList(
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ).indexOf(monthName) + 1;
+    
+        // Get the total pay for the selected job title and month
+        float totalPay = Report.getTotalPayByJobtitle(jobtitle_id, monthIndex);
+    
+        // Find the job title by matching the ID
+        String[] jobTitleNames = {
+            "Software Manager", "Software Architect", "Software Engineer", "Software Developer",
+            "Marketing Manager", "Marketing Associate", "Marketing Assistant",
+            "HR Manager", "HR Analyst",
+            "Chief Executive Officer", "Chief Financial Officer", "Chief Information Officer"
+        };
+        int[] jobTitleIds = {
+            100, 101, 102, 103,
+            200, 201, 202,
+            300, 301,
+            900, 901, 902
+        };
+        String jobTitleName = "Unknown";
+    
+        // Match the job title ID to the name
+        for (int i = 0; i < jobTitleIds.length; i++) {
+            if (jobTitleIds[i] == jobtitle_id) {
+                jobTitleName = jobTitleNames[i];
+                break;
+            }
+        }
+    
+        // Show the total pay message
+        JOptionPane.showMessageDialog(frame,
+            "The total pay for " + jobTitleName + " in " + monthName + " is $" + totalPay);
+    }    
     public static void main(String[] args) {
         new ReportUI();
     }

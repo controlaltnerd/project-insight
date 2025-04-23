@@ -13,7 +13,7 @@ public class UpdateSalaryUI extends JFrame {
     public UpdateSalaryUI() {
         setTitle("Salary Range Update (Admin Only)");
         setSize(400, 250);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
      
         // Min Salary Label and TextField
@@ -72,11 +72,6 @@ public class UpdateSalaryUI extends JFrame {
             // Show error dialog if something else goes wrong
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
-    }
-
-
-    public static void main(String[] args) {
-        new UpdateSalaryUI();
     }
 }
 

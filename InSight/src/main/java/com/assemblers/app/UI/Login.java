@@ -129,10 +129,11 @@ public class Login extends JFrame {
         }       
     }
     private void openAdminPage() {
-            new AdminPage();
+        dispose();
+        new AdminPage();
     }
-
     private void openEmployeePage(int empId) {
+        dispose();
         //new EmployeePage(empId);
     }
     public static void main(String[] args) {
