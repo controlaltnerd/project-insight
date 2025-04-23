@@ -149,7 +149,7 @@ public class Login extends JFrame {
     }
     private void openEmployeePage(int empId) {
         dispose();
-        new EmployeePage(1);
+        new EmployeePage(empId);
     }
     public static void main(String[] args) {
         new Login();
