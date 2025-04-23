@@ -14,10 +14,10 @@ public class EmployeePage extends JPanel {
     private JButton viewInfo;
     private int employeeID;
 
-    public EmployeePage() {
+    public EmployeePage(int empId) {
         // Panel Setup
         //this.setLayout(new BorderLayout());
-
+        employeeID = empId;
         // Labels for the left panel
         label = new JLabel("💻");
         label.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 30));
