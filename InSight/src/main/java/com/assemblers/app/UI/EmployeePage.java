@@ -37,35 +37,43 @@ public class EmployeePage extends JFrame {
         query = new JLabel("View Your Personalized Information!");
         query.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
-        // Creating the left panel
-        empPanel.setBackground(Color.ORANGE);
-        empPanel.setPreferredSize(new Dimension(400, 600));
-
-        label.setBounds(150, 20, label.getPreferredSize().width, label.getPreferredSize().height);
-        text.setBounds(120, 60, 200, 20);
-        query.setBounds(50, 100, 300, 30);
-
-        empPanel.add(label);
-        empPanel.add(text);
-        empPanel.add(query);
-
-        // Keep components centered in the panel
+        // View Reports label
+        reports = new JLabel("");
         
-        // Selection employeeButtons for right panel
-        viewInfo = new JButton("View Report");
-
         // Adding employeeButtons to right panel, also adds action listeners to them
+        viewInfo = new JButton("View Reports");
         viewInfo.setFocusable(false);
         viewInfo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 displayInfo();
             }
         });
-        empPanel.add(viewInfo);
 
-        // View Reports label
-        reports = new JLabel("");
+        empPanel.setLayout(new BoxLayout(empPanel, BoxLayout.Y_AXIS));
+        empPanel.setBackground(Color.ORANGE);
+        empPanel.setPreferredSize(new Dimension(400, 600));
+
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        text.setAlignmentX(Component.CENTER_ALIGNMENT);
+        query.setAlignmentX(Component.CENTER_ALIGNMENT);
+        viewInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        reports.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        empPanel.add(Box.createVerticalStrut(20));
+        empPanel.add(label);
+        empPanel.add(Box.createVerticalStrut(20));
+        empPanel.add(text);
+        empPanel.add(Box.createVerticalStrut(10));
+        empPanel.add(query);
+        empPanel.add(Box.createVerticalStrut(20));
+        empPanel.add(viewInfo);
         empPanel.add(reports);
+
+        // Keep components centered in the panel
+        
+        // Selection employeeButtons for right panel
+        
+
         add(empPanel);
         setVisible(true);
     }
@@ -88,7 +96,7 @@ public class EmployeePage extends JFrame {
             rep.concat(empPay.getFname() + " " + empPay.getLname() + "'s earnings is $" + Double.toString(empPay.getEarning()) + '\n');
         }
         reports.setText(rep);
-        System.out.println("Displaying Info"); //Debug
+        System.out.println(rep); //Debug
     }
 
 }
