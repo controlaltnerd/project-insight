@@ -44,55 +44,59 @@ public class ReportDAO {
     
     return EmployeePayInfoList.isEmpty() ? null : EmployeePayInfoList; // Return null if no records are found
 }
-public static float totalPayByJobtitle(int job_title_id){
+public static float totalPayByJobtitle(int job_title_id, int month) {
     String query = "SELECT SUM(p.earnings) AS total_pay " +
-                       "FROM payroll p " +
-                       "JOIN employees e ON p.empid = e.empid " +
-                       "JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
-                       "WHERE ejt.job_title_id = ?";
+                   "FROM payroll p " +
+                   "JOIN employees e ON p.empid = e.empid " +
+                   "JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
+                   "WHERE ejt.job_title_id = ? AND MONTH(p.pay_date) = ?";
 
-        float totalPay = 0.0f;
+    float totalPay = 0.0f;
 
-        try (Connection conn = DatabaseAccessHelper.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+    try (Connection conn = DatabaseAccessHelper.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, job_title_id);
-            ResultSet rs = stmt.executeQuery();
+        stmt.setInt(1, job_title_id);
+        stmt.setInt(2, month);
+        ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                totalPay = rs.getFloat("total_pay");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (rs.next()) {
+            totalPay = rs.getFloat("total_pay");
         }
 
-        return totalPay;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return totalPay;
 }
-public static float totalPayByDivision(int job_title_id){
+public static float totalPayByDivision(int division_id, int month) {
     String query = "SELECT SUM(p.earnings) AS total_pay " +
-                       "FROM payroll p " +
-                       "JOIN employees e ON p.empid = e.empid " +
-                       "JOIN employee_division ed ON e.empid = ed.empid " +
-                       "WHERE ed.div_ID = ?";
+                   "FROM payroll p " +
+                   "JOIN employees e ON p.empid = e.empid " +
+                   "JOIN employee_division ed ON e.empid = ed.empid " +
+                   "WHERE ed.div_ID = ? " +
+                   "AND MONTH(p.pay_date) = ?";
 
-        float totalPay = 0.0f;
+    float totalPay = 0.0f;
 
-        try (Connection conn = DatabaseAccessHelper.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+    try (Connection conn = DatabaseAccessHelper.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, job_title_id);
-            ResultSet rs = stmt.executeQuery();
+        stmt.setInt(1, division_id);
+        stmt.setInt(2, month);
 
-            if (rs.next()) {
-                totalPay = rs.getFloat("total_pay");
-            }
+        ResultSet rs = stmt.executeQuery();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (rs.next()) {
+            totalPay = rs.getFloat("total_pay");
         }
 
-        return totalPay;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return totalPay;
 }
 public static List<EmployeePayInfo> getAllEmployeePayInfo() {
     String query = "SELECT e.empid, e.Fname, e.Lname, " +

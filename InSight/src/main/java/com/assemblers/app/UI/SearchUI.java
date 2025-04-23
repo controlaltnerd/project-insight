@@ -43,7 +43,7 @@ public class SearchUI {
 
     public SearchUI() {
         frame = new JFrame("Search Employee");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setBounds(100, 100, 400, 300);
         frame.getContentPane().setLayout(new BorderLayout());
 
