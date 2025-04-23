@@ -19,6 +19,7 @@ public class EmployeePage extends JFrame {
         // Panel Setup
         //this.setLayout(new BorderLayout());
         employeeID = empId;
+        empPanel = new JPanel();
 
         setTitle("Login Form");
         setSize(400, 600);
@@ -38,7 +39,7 @@ public class EmployeePage extends JFrame {
 
         // Creating the left panel
         empPanel.setBackground(Color.ORANGE);
-        empPanel.setPreferredSize(new Dimension(400, 500));
+        empPanel.setPreferredSize(new Dimension(400, 600));
 
         label.setBounds(150, 20, label.getPreferredSize().width, label.getPreferredSize().height);
         text.setBounds(120, 60, 200, 20);
@@ -66,6 +67,7 @@ public class EmployeePage extends JFrame {
         reports = new JLabel("");
         empPanel.add(reports);
         add(empPanel);
+        setVisible(true);
     }
     public void setEmpID(int id)
     {
