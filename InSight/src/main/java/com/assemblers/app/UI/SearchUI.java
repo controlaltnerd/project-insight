@@ -44,7 +44,7 @@ public class SearchUI {
     public SearchUI() {
         frame = new JFrame("Search Employee");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setBounds(100, 100, 400, 300);
+        frame.setBounds(100, 100, 400, 130);
         frame.getContentPane().setLayout(new BorderLayout());
 
         // Top panel for the Back button (left-aligned)
