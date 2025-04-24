@@ -8,18 +8,19 @@ import com.assemblers.app.Models.EmployeePayInfo;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class EmployeePage extends JFrame {
     private JPanel empPanel;
-    private JLabel label, text, query, reports;
+    private JLabel label, text, query;
     private JButton viewInfo;
     private int employeeID;
+    private boolean isReport;
 
     public EmployeePage(int empId) {
         // Panel Setup
         //this.setLayout(new BorderLayout());
         employeeID = empId;
+        isReport = false;
         empPanel = new JPanel();
 
         setTitle("Login Form");
@@ -32,14 +33,11 @@ public class EmployeePage extends JFrame {
         label.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 30));
         label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Adds padding
 
-        text = new JLabel("Welcome [employee_name]!");
+        text = new JLabel("Welcome " + Report.getEmployeePayByEmpid(employeeID).get(0).getFname() + "!");
         text.setFont(new Font("Helvetica", Font.PLAIN, 15));
 
         query = new JLabel("View Your Personalized Information!");
         query.setFont(new Font("Helvetica", Font.PLAIN, 20));
-
-        // View Reports label
-        reports = new JLabel("");
         
         // Adding employeeButtons to right panel, also adds action listeners to them
         viewInfo = new JButton("View Reports");
@@ -58,7 +56,6 @@ public class EmployeePage extends JFrame {
         text.setAlignmentX(Component.CENTER_ALIGNMENT);
         query.setAlignmentX(Component.CENTER_ALIGNMENT);
         viewInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
-        reports.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         empPanel.add(Box.createVerticalStrut(20));
         empPanel.add(label);
@@ -68,8 +65,6 @@ public class EmployeePage extends JFrame {
         empPanel.add(query);
         empPanel.add(Box.createVerticalStrut(20));
         empPanel.add(viewInfo);
-        empPanel.add(reports);
-
         // Keep components centered in the panel
         
         // Selection employeeButtons for right panel
@@ -90,39 +85,72 @@ public class EmployeePage extends JFrame {
 
     public void displayInfo()
     {
-        String[] columnNames = {
-            "EmpID", "First Name", "Last Name", "Pay Date", "Earnings", "Fed Tax", "Fed Med", "Fed SS",
-            "State Tax", "401k", "Healthcare"
-        };        
+        if (!isReport) {
+            String[] columnNames = {
+                "EmpID", "First Name", "Last Name", "Pay Date", "Earnings", "Fed Tax", "Fed Med", "Fed SS",
+                "State Tax", "401k", "Healthcare"
+            };        
 
-        Object[][] data = new Object[Report.getEmployeePayByEmpid(employeeID).size()][columnNames.length];
+            Object[][] data = new Object[Report.getEmployeePayByEmpid(employeeID).size()][columnNames.length];
 
-        String rep = "";
-        
-        for (int i = 0; i < Report.getEmployeePayByEmpid(employeeID).size(); i++) 
-        {
-            EmployeePayInfo r = Report.getEmployeePayByEmpid(employeeID).get(i);
-            data[i][0] = r.getEmpid();
-            data[i][1] = r.getFname();
-            data[i][2] = r.getLname();
-            data[i][3] = r.getPayDate();
-            data[i][4] = r.getEarning();
-            data[i][5] = r.getFed_tax();
-            data[i][6] = r.getFed_med();
-            data[i][7] = r.getFed_SS();
-            data[i][8] = r.getState_tax();
-            data[i][9] = r.getRetire_401K();
-            data[i][10] = r.getHealth_care();
+            //String rep = "";
+            
+            for (int i = 0; i < Report.getEmployeePayByEmpid(employeeID).size(); i++) 
+            {
+                EmployeePayInfo r = Report.getEmployeePayByEmpid(employeeID).get(i);
+                data[i][0] = r.getEmpid();
+                data[i][1] = r.getFname();
+                data[i][2] = r.getLname();
+                data[i][3] = r.getPayDate();
+                data[i][4] = r.getEarning();
+                data[i][5] = r.getFed_tax();
+                data[i][6] = r.getFed_med();
+                data[i][7] = r.getFed_SS();
+                data[i][8] = r.getState_tax();
+                data[i][9] = r.getRetire_401K();
+                data[i][10] = r.getHealth_care();
+            }
+            JTable reportings = new JTable(data, columnNames);
+            reportings.setEnabled(false);
+            reportings.setRowHeight(25);
+            JScrollPane reportScrollPane = new JScrollPane(reportings);
+            reportScrollPane.setPreferredSize(new Dimension(empPanel.getWidth(), 25));
+            reportScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+
+            JButton closeRep = new JButton("Close Report");
+
+            closeRep.setFocusable(false);
+            closeRep.setAlignmentX(Component.CENTER_ALIGNMENT);
+            closeRep.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    closeDisplayWindow();
+                }
+            });
+            
+            empPanel.add(Box.createVerticalStrut(20));
+            empPanel.add(reportScrollPane, BorderLayout.CENTER);
+            empPanel.add(Box.createVerticalStrut(20));
+            empPanel.add(closeRep, BorderLayout.CENTER);
+            empPanel.revalidate();
+            empPanel.repaint();
+            isReport = true;
         }
-        JTable reportings = new JTable(data, columnNames);
-        reportings.setEnabled(false);
-        reportings.setRowHeight(25);
-        JScrollPane reportScrollPane = new JScrollPane(reportings);
-        reportScrollPane.setPreferredSize(new Dimension(1000, 150));
-        empPanel.add(reportScrollPane, BorderLayout.CENTER);
-        empPanel.revalidate();
-        empPanel.repaint();
-        System.out.println(Report.getEmployeePayByEmpid(employeeID)); //Debug
+    }
+
+    public void closeDisplayWindow()
+    {
+        if (isReport)
+        {
+            empPanel.remove(empPanel.getComponentCount() - 1);
+            empPanel.remove(empPanel.getComponentCount() - 1);
+            empPanel.remove(empPanel.getComponentCount() - 1);
+            empPanel.remove(empPanel.getComponentCount() - 1);
+
+
+            empPanel.revalidate();
+            empPanel.repaint();
+            isReport = false;
+        }
     }
 
 }
