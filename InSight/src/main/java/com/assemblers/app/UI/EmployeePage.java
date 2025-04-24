@@ -8,6 +8,7 @@ import com.assemblers.app.Models.EmployeePayInfo;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class EmployeePage extends JFrame {
     private JPanel empPanel;
@@ -89,15 +90,39 @@ public class EmployeePage extends JFrame {
 
     public void displayInfo()
     {
+        String[] columnNames = {
+            "EmpID", "First Name", "Last Name", "Pay Date", "Earnings", "Fed Tax", "Fed Med", "Fed SS",
+            "State Tax", "401k", "Healthcare"
+        };        
+
+        Object[][] data = new Object[Report.getEmployeePayByEmpid(employeeID).size()][columnNames.length];
+
         String rep = "";
-        //reports.setText(Double.toString(Report.getEmployeePayByEmpid(employeeID).getEarning()));
-        for (EmployeePayInfo empPay : Report.getEmployeePayByEmpid(employeeID)) 
+        
+        for (int i = 0; i < Report.getEmployeePayByEmpid(employeeID).size(); i++) 
         {
-            rep.concat(empPay.getFname() + " " + empPay.getLname() + "'s earnings is $" + Double.toString(empPay.getEarning()) + '\n');
-            System.out.println("Processing");
+            EmployeePayInfo r = Report.getEmployeePayByEmpid(employeeID).get(i);
+            data[i][0] = r.getEmpid();
+            data[i][1] = r.getFname();
+            data[i][2] = r.getLname();
+            data[i][3] = r.getPayDate();
+            data[i][4] = r.getEarning();
+            data[i][5] = r.getFed_tax();
+            data[i][6] = r.getFed_med();
+            data[i][7] = r.getFed_SS();
+            data[i][8] = r.getState_tax();
+            data[i][9] = r.getRetire_401K();
+            data[i][10] = r.getHealth_care();
         }
-        reports.setText(rep);
-        System.out.println(rep); //Debug
+        JTable reportings = new JTable(data, columnNames);
+        reportings.setEnabled(false);
+        reportings.setRowHeight(25);
+        JScrollPane reportScrollPane = new JScrollPane(reportings);
+        reportScrollPane.setPreferredSize(new Dimension(1000, 150));
+        empPanel.add(reportScrollPane, BorderLayout.CENTER);
+        empPanel.revalidate();
+        empPanel.repaint();
+        System.out.println(Report.getEmployeePayByEmpid(employeeID)); //Debug
     }
 
 }
