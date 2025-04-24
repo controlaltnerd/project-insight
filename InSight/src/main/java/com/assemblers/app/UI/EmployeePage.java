@@ -94,6 +94,7 @@ public class EmployeePage extends JFrame {
         for (EmployeePayInfo empPay : Report.getEmployeePayByEmpid(employeeID)) 
         {
             rep.concat(empPay.getFname() + " " + empPay.getLname() + "'s earnings is $" + Double.toString(empPay.getEarning()) + '\n');
+            System.out.println("Processing");
         }
         reports.setText(rep);
         System.out.println(rep); //Debug
