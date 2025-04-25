@@ -54,25 +54,43 @@ public class UpdateSalaryUI extends JFrame {
     
     private void applySalaryUpdate() {
         try {
-           
             double min = Double.parseDouble(minSalaryField.getText());
             double max = Double.parseDouble(maxSalaryField.getText());
             double percent = Double.parseDouble(percentageField.getText());
-
-            // Use the UpdateRangeSalary class to handle the database operation
+    
+            // Perform the salary update
             int updated = UpdateRangeSalary.updateRangeSalary(min, max, percent);
-
-            
-            JOptionPane.showMessageDialog(this, updated + " employee(s) salary updated by " + percent + "%.");
-
+    
+            // Load custom icon from resources
+            ImageIcon icon = new ImageIcon(getClass().getResource("/logo.png")); // replace with your actual image name
+            JOptionPane.showMessageDialog(
+                this,
+                updated + " employee(s) salary updated by " + percent + "%.",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE,
+                icon
+            );
         } catch (NumberFormatException ex) {
-            // Show error dialog if input values are not valid numbers
-            JOptionPane.showMessageDialog(this, "Error: Please enter valid numbers for all fields.");
+            ImageIcon errorIcon = new ImageIcon(getClass().getResource("/error.png")); // replace with your error image
+            JOptionPane.showMessageDialog(
+                this,
+                "Input only numbers, YOUR STOOPID ",
+                "Input Error",
+                JOptionPane.ERROR_MESSAGE,
+                errorIcon
+            );
         } catch (Exception ex) {
-            // Show error dialog if something else goes wrong
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            ImageIcon errorIcon = new ImageIcon(getClass().getResource("/error.png")); // reuse error image
+            JOptionPane.showMessageDialog(
+                this,
+                "Error: " + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE,
+                errorIcon
+            );
         }
     }
+    
 }
 
 
