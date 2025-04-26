@@ -1,22 +1,8 @@
 package com.assemblers.app.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import com.assemblers.app.APIController.EmployeeInfo;
 import com.assemblers.app.APIController.Report;
@@ -29,120 +15,135 @@ public class SearchUI {
     private JButton searchButton;
     private JPanel searchPanel, optionsPanel, topPanel;
     private JButton backButton;
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                SearchUI window = new SearchUI();
-                window.frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+    private JPanel backgroundPanel;
 
     public SearchUI() {
         frame = new JFrame("Search Employee");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setBounds(100, 100, 400, 130);
-        frame.getContentPane().setLayout(new BorderLayout());
+        frame.setBounds(100, 100, 500, 200);
+        frame.setLocation(0, 0);
+
+        // Create background panel with image
+        backgroundPanel = new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    Image backgroundImage = new ImageIcon(getClass().getResource("/background.png")).getImage();
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        backgroundPanel.setLayout(new BorderLayout());
+        frame.setContentPane(backgroundPanel);
+
+        // Shared style
+        Font buttonFont = new Font("Monospaced", Font.PLAIN, 12);
+        Color buttonBgColor = new Color(70, 130, 180); // Steel blue
+        Color buttonFgColor = Color.BLACK;
 
         // Top panel for the Back button (left-aligned)
         topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        frame.getContentPane().add(topPanel, BorderLayout.NORTH);
+        topPanel.setOpaque(false); // transparent background
+        backgroundPanel.add(topPanel, BorderLayout.NORTH);
 
-        // Back button (hidden initially)
-        backButton = new JButton("Back");
-        backButton.setPreferredSize(new Dimension(100, 30)); // Same size as other buttons
+        backButton = createStyledButton("Back", buttonFont, buttonBgColor, buttonFgColor);
         backButton.setVisible(false);
         topPanel.add(backButton);
 
-        // Search panel (contains Employee ID label, search field, and search button)
+        // Search panel
         searchPanel = new JPanel(new FlowLayout());
-        frame.getContentPane().add(searchPanel, BorderLayout.CENTER);
+        searchPanel.setOpaque(false);
+        backgroundPanel.add(searchPanel, BorderLayout.CENTER);
 
-        JLabel searchLabel = new JLabel("Search by ID, Name, or SSN:"); // Label for search bar
+        JLabel searchLabel = new JLabel("Search by ID, Name, or SSN:");
+        searchLabel.setForeground(Color.WHITE); // Make text readable
         searchPanel.add(searchLabel);
 
         searchField = new JTextField(15);
+        searchField.setFont(buttonFont);
+        searchField.setBackground(new Color(255, 255, 255, 200)); // Slightly transparent white
         searchPanel.add(searchField);
 
-        searchButton = new JButton("Search");
-        searchButton.setPreferredSize(new Dimension(100, 30)); // Match other buttons
+        searchButton = createStyledButton("Search", buttonFont, buttonBgColor, buttonFgColor);
         searchPanel.add(searchButton);
 
-        // Options panel (initially hidden)
+        // Options panel
         optionsPanel = new JPanel(new GridBagLayout());
-        frame.getContentPane().add(optionsPanel, BorderLayout.SOUTH);
+        optionsPanel.setOpaque(false);
+        backgroundPanel.add(optionsPanel, BorderLayout.SOUTH);
         optionsPanel.setVisible(false);
 
-        // Search button action
+        // Actions
         searchButton.addActionListener(e -> handleSearch());
-
-        // Back button action
         backButton.addActionListener(e -> goBackToSearch());
 
         frame.setVisible(true);
+    }
 
+    private JButton createStyledButton(String text, Font font, Color bgColor, Color fgColor) {
+        JButton button = new JButton(text);
+        button.setFont(font);
+        button.setBackground(bgColor);
+        button.setForeground(fgColor);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(140, 30));
+        return button;
     }
 
     private void handleSearch() {
         String searchText = searchField.getText().trim();
 
-        // Check if the search text is empty
         if (searchText.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "Please enter a search term.", "Warning", JOptionPane.WARNING_MESSAGE);
+            ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+            JOptionPane.showMessageDialog(frame, "Please enter a search term.", "Warning", JOptionPane.WARNING_MESSAGE,customIcon);
             return;
         }
 
         try {
-            // Try searching by Employee ID
             if (isNumeric(searchText)) {
-                System.out.println("Searching by Employee ID: " + searchText);  // Debugging line
-                Employee employee = EmployeeInfo.viewEmployeeInfoById(Integer.parseInt(searchText));  // Corrected DAO
-
+                Employee employee = EmployeeInfo.viewEmployeeInfoById(Integer.parseInt(searchText));
                 if (employee != null) {
                     showEmployeeInfo(employee);
                 } else {
-                    JOptionPane.showMessageDialog(frame, "No employee found with ID: " + searchText, "Error", JOptionPane.ERROR_MESSAGE);
+                    ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
+                    JOptionPane.showMessageDialog(frame, "No employee found with ID: " + searchText, "Error", JOptionPane.ERROR_MESSAGE,customIcon);
                 }
-            } 
-            // Try searching by Name (First and Last Name)
-            else if (searchText.contains(" ")) {
+            } else if (searchText.contains(" ")) {
                 String[] nameParts = searchText.split(" ");
                 if (nameParts.length == 2) {
-                    System.out.println("Searching by Name: " + nameParts[0] + " " + nameParts[1]);  // Debugging line
-                    Employee employee = EmployeeInfo.viewEmployeeInfoByName(nameParts[0], nameParts[1]);  // Corrected DAO
-
+                    Employee employee = EmployeeInfo.viewEmployeeInfoByName(nameParts[0], nameParts[1]);
                     if (employee != null) {
                         showEmployeeInfo(employee);
                     } else {
-                        JOptionPane.showMessageDialog(frame, "No employee found with name: " + searchText, "Error", JOptionPane.ERROR_MESSAGE);
+                        ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
+                        JOptionPane.showMessageDialog(frame, "No employee found with name: " + searchText, "Error", JOptionPane.ERROR_MESSAGE,customIcon);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Please enter both first and last name.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+                    JOptionPane.showMessageDialog(frame, "Please enter both first and last name.", "Warning", JOptionPane.WARNING_MESSAGE,customIcon);
                 }
-            } 
-            // Try searching by SSN
-            else {
-                System.out.println("Searching by SSN: " + searchText);  // Debugging line
-                Employee employee = EmployeeInfo.viewEmployeeInfoBySsn(searchText);  // Corrected DAO
-
+            } else {
+                Employee employee = EmployeeInfo.viewEmployeeInfoBySsn(searchText);
                 if (employee != null) {
                     showEmployeeInfo(employee);
                 } else {
-                    JOptionPane.showMessageDialog(frame, "No employee found with SSN: " + searchText, "Error", JOptionPane.ERROR_MESSAGE);
+                    ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
+                    JOptionPane.showMessageDialog(frame, "No employee found with SSN: " + searchText, "Error", JOptionPane.ERROR_MESSAGE,customIcon);
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace(); // Print exception details for debugging
-            JOptionPane.showMessageDialog(frame, "An error occurred while searching.", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+            ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+            JOptionPane.showMessageDialog(frame, "An error occurred while searching.", "Error", JOptionPane.ERROR_MESSAGE,customIcon);
         }
     }
 
     private boolean isNumeric(String str) {
         try {
-            Integer.parseInt(str);  // Try to parse as an integer (for empid)
+            Integer.parseInt(str);
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -150,80 +151,103 @@ public class SearchUI {
     }
 
     private void showEmployeeInfo(Employee employee) {
-        searchPanel.setVisible(false);  // Hide the search bar
-        backButton.setVisible(true);    // Show the back button
+        searchPanel.setVisible(false);
+        backButton.setVisible(true);
 
-        optionsPanel.removeAll();      // Clear any previous options
+        optionsPanel.removeAll();
+        Dimension buttonSize = new Dimension(160, 40);
 
-        Dimension buttonSize = new Dimension(130, 40); // Set uniform button size
-
-        // Set up GridBagConstraints with spacing between the buttons
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;  // Column position
-        gbc.weightx = 1.0;  // Make sure the buttons stretch across the panel // Make buttons fill the width
-        gbc.insets = new Insets(10, 10, 10, 10);  // Add space around each button (top, left, bottom, right)
+        gbc.gridx = 0;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(10, 10, 10, 10);
 
-        // View Employee Info button
-        JButton viewButton = new JButton("View Employee Info");
+        // View Employee Info Button
+        JButton viewButton = createStyledButton("View Employee Info", new Font("Monospaced", Font.PLAIN, 12),
+                new Color(70, 130, 180), Color.BLACK);
         viewButton.setPreferredSize(buttonSize);
         optionsPanel.add(viewButton, gbc);
 
-        // Add space between the buttons (adjust vertical spacing)
-        gbc.gridy = 1;  // Move down to the next row
-        optionsPanel.add(createSpacingLabel(), gbc); // Adding a "dummy" component for spacing
+        gbc.gridy = 1;
+        optionsPanel.add(createSpacingLabel(), gbc);
 
-        // Report button
-        JButton reportButton = new JButton("View Report");
+        // View Report Button
+        JButton reportButton = createStyledButton("View Report", new Font("Monospaced", Font.PLAIN, 12),
+                new Color(70, 130, 180), Color.BLACK);
         reportButton.setPreferredSize(buttonSize);
         gbc.gridy = 2;
         optionsPanel.add(reportButton, gbc);
 
-        // Add more space between the buttons
         gbc.gridy = 3;
-        optionsPanel.add(createSpacingLabel(), gbc);  // Adding a "dummy" component for spacing
+        optionsPanel.add(createSpacingLabel(), gbc);
 
-        optionsPanel.setVisible(true);   // Show the options panel
+        optionsPanel.setVisible(true);
         frame.revalidate();
         frame.repaint();
 
-        // View Employee Info button action
         viewButton.addActionListener(e -> {
             String[] columnNames = {"ID", "Name", "SSN", "Job Title", "Email", "Salary"};
-            Object[][] data = {
-                {
+            Object[][] data = {{
                     employee.getEmpid(),
                     employee.getFname() + " " + employee.getLname(),
                     employee.getSsn(),
                     employee.getJob_title(),
                     employee.getEmail(),
                     employee.getSalary()
-                }
-            };
-
+            }};
+        
             JTable table = new JTable(data, columnNames);
             table.setEnabled(false);
             table.setRowHeight(25);
+            table.setFont(new Font("Monospaced", Font.PLAIN, 12));
+            table.getTableHeader().setFont(new Font("Monospaced", Font.BOLD, 12));
             JScrollPane scrollPane = new JScrollPane(table);
-            scrollPane.setPreferredSize(new Dimension(600, 70));
-
-            JOptionPane.showMessageDialog(frame, scrollPane, "Employee Info", JOptionPane.INFORMATION_MESSAGE);
+            scrollPane.setPreferredSize(new Dimension(1000, 70));
+        
+            // Load and scale the custom icon
+            ImageIcon customIcon = new ImageIcon(getClass().getResource("/logo.png"));
+            Image img = customIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(img);
+        
+            // Use showOptionDialog instead of showMessageDialog
+            JOptionPane.showOptionDialog(
+                    frame,
+                    scrollPane,              // content
+                    "Employee Info",          // title
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    scaledIcon,               // custom icon here
+                    new Object[]{},           // no options (just OK)
+                    null
+            );
         });
+        
 
-
-        // View Report button action
         reportButton.addActionListener(e -> {
             List<EmployeePayInfo> reports = Report.getEmployeePayByEmpid(employee.getEmpid());
-
             if (reports == null || reports.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "No payroll report found for employee ID: " + employee.getEmpid(), "Report Not Found", JOptionPane.WARNING_MESSAGE);
+                ImageIcon warningIcon = new ImageIcon(getClass().getResource("404.jpge"));
+                Image warningImg = warningIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                ImageIcon scaledWarningIcon = new ImageIcon(warningImg);
+        
+                JOptionPane.showOptionDialog(
+                    frame,
+                    "No payroll report found for employee ID: " + employee.getEmpid(),
+                    "Report Not Found",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.WARNING_MESSAGE,
+                    scaledWarningIcon,
+                    new Object[]{},
+                    null
+                );
                 return;
             }
-
+        
             String[] columnNames = {
-                "EmpID", "First Name", "Last Name", "Pay Date", "Earnings", "Fed Tax", "Fed Med", "Fed SS",
-                "State Tax", "401k", "Healthcare"
+                "EmpID", "First Name", "Last Name", "Pay Date", "Earnings", 
+                "Fed Tax", "Fed Med", "Fed SS", "State Tax", "401k", "Healthcare"
             };
-
+        
             Object[][] data = new Object[reports.size()][columnNames.length];
             for (int i = 0; i < reports.size(); i++) {
                 EmployeePayInfo r = reports.get(i);
@@ -239,28 +263,48 @@ public class SearchUI {
                 data[i][9] = r.getRetire_401K();
                 data[i][10] = r.getHealth_care();
             }
-
+        
             JTable reportTable = new JTable(data, columnNames);
             reportTable.setEnabled(false);
             reportTable.setRowHeight(25);
+            reportTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
+            reportTable.getTableHeader().setFont(new Font("Monospaced", Font.BOLD, 12));
             JScrollPane reportScrollPane = new JScrollPane(reportTable);
             reportScrollPane.setPreferredSize(new Dimension(1000, 150));
-
-            JOptionPane.showMessageDialog(frame, reportScrollPane, "Payroll Report", JOptionPane.INFORMATION_MESSAGE);
+        
+            // Load and scale custom info icon
+            ImageIcon customIcon = new ImageIcon(getClass().getResource("/logo.png"));
+            Image img = customIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(img);
+        
+            // Use showOptionDialog instead of showMessageDialog
+            JOptionPane.showOptionDialog(
+                frame,
+                reportScrollPane,
+                "Payroll Report",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                scaledIcon,
+                new Object[]{},
+                null
+            );
         });
+        
     }
 
     private void goBackToSearch() {
-        searchPanel.setVisible(true); // Show search bar
+        searchPanel.setVisible(true);
         searchButton.setVisible(true);
-        backButton.setVisible(false); // Hide back button
-        optionsPanel.setVisible(false);  // Hide options panel
+        backButton.setVisible(false);
+        optionsPanel.setVisible(false);
     }
 
-    // Helper method to create a spacing label (empty JLabel) for vertical spacing
     private JLabel createSpacingLabel() {
-        JLabel label = new JLabel("");  // Empty label used for spacing
-        label.setPreferredSize(new Dimension(1, 10));  // Set the height for the spacing
+        JLabel label = new JLabel("");
+        label.setPreferredSize(new Dimension(1, 10));
         return label;
     }
+    /*public static void main(String[] args) {
+        new SearchUI();
+    }*/
 }

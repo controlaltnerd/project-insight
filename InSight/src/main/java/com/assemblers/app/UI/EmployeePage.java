@@ -19,7 +19,7 @@ public class EmployeePage extends JFrame {
     public EmployeePage(int empId) {
         // Panel Setup
         //this.setLayout(new BorderLayout());
-        setTitle("Login Form");
+        setTitle("Employee Page");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
