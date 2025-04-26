@@ -11,33 +11,44 @@ import java.awt.event.ActionListener;
 
 public class EmployeePage extends JFrame {
     private JPanel empPanel;
-    private JLabel label, text, query;
-    private JButton viewInfo;
+    private JLabel text, query;
+    private JButton viewInfo, toLogin;
     private int employeeID;
     private boolean isReport;
 
     public EmployeePage(int empId) {
         // Panel Setup
         //this.setLayout(new BorderLayout());
-        employeeID = empId;
-        isReport = false;
-        empPanel = new JPanel();
-
         setTitle("Login Form");
-        setSize(400, 600);
+        setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-        // Labels for the left panel
-        label = new JLabel("💻");
-        label.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 30));
-        label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Adds padding
+        Font empFont = new Font("Monospaced", Font.BOLD, 24);
+        Color beige = new Color(37, 144, 232);
+
+        employeeID = empId;
+        isReport = false;
+        empPanel = new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    Image backgroundImage = new ImageIcon(getClass().getResource("/dog.jpg")).getImage();
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                } catch (Exception e) {
+                    e.printStackTrace(); // Handle any exceptions related to image loading
+                }
+            }
+        };
+        empPanel.setOpaque(false);
 
         text = new JLabel("Welcome " + Report.getEmployeePayByEmpid(employeeID).get(0).getFname() + "!");
-        text.setFont(new Font("Helvetica", Font.PLAIN, 15));
+        text.setFont(empFont);
+        text.setForeground(beige);
 
         query = new JLabel("View Your Personalized Information!");
-        query.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        query.setFont(empFont);
+        query.setForeground(beige);
         
         // Adding employeeButtons to right panel, also adds action listeners to them
         viewInfo = new JButton("View Reports");
@@ -48,28 +59,36 @@ public class EmployeePage extends JFrame {
             }
         });
 
+        toLogin = new JButton("Return to Login");
+        toLogin.setFocusable(false);
+        toLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                gotoLogin();
+            }
+        });
+
         empPanel.setLayout(new BoxLayout(empPanel, BoxLayout.Y_AXIS));
-        empPanel.setBackground(Color.ORANGE);
+        //empPanel.setBackground(Color.ORANGE);
         empPanel.setPreferredSize(new Dimension(400, 600));
 
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
         text.setAlignmentX(Component.CENTER_ALIGNMENT);
         query.setAlignmentX(Component.CENTER_ALIGNMENT);
         viewInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        toLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        empPanel.add(Box.createVerticalStrut(20));
-        empPanel.add(label);
         empPanel.add(Box.createVerticalStrut(20));
         empPanel.add(text);
         empPanel.add(Box.createVerticalStrut(10));
         empPanel.add(query);
         empPanel.add(Box.createVerticalStrut(20));
+        empPanel.add(toLogin);
+        empPanel.add(Box.createVerticalStrut(10));
         empPanel.add(viewInfo);
         // Keep components centered in the panel
         
         // Selection employeeButtons for right panel
         
-
+        empPanel.repaint();
         add(empPanel);
         setVisible(true);
     }
@@ -151,6 +170,12 @@ public class EmployeePage extends JFrame {
             empPanel.repaint();
             isReport = false;
         }
+    }
+
+    public void gotoLogin()
+    {
+        dispose();
+        new Login();
     }
 
 }
