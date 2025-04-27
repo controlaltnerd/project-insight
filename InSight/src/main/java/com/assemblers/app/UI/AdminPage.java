@@ -3,14 +3,13 @@ package com.assemblers.app.UI;
 import javax.swing.*;
 import java.awt.*;
 
-
 public class AdminPage {
     private JFrame frame;
 
     public AdminPage() {
         frame = new JFrame("WELCOME TO Admin Dashboard");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
+        frame.setSize(500, 400);
         frame.setLocationRelativeTo(null);
 
         // Custom background panel
@@ -39,7 +38,7 @@ public class AdminPage {
         JButton updateSalaryBtn = createLoginStyledButton("Update Salary Range", buttonFont, buttonBgColor, buttonFgColor);
         JButton viewReportBtn = createLoginStyledButton("View Report", buttonFont, buttonBgColor, buttonFgColor);
         JButton addEmployeeBtn = createLoginStyledButton("Add New Employee", buttonFont, buttonBgColor, buttonFgColor);
-        JButton exitBtn = createLoginStyledButton("Exit", buttonFont, buttonBgColor, buttonFgColor);
+        JButton exitBtn = createLoginStyledButton("Log Out", buttonFont, buttonBgColor, buttonFgColor);
 
         // Add actions
         searchEmployeeBtn.addActionListener(e -> openSearchEmployeePage());
@@ -47,15 +46,17 @@ public class AdminPage {
         updateSalaryBtn.addActionListener(e -> openUpdateSalaryRangePage());
         viewReportBtn.addActionListener(e -> openViewReportPage());
         addEmployeeBtn.addActionListener(e -> openAddEmployeePage());
-        exitBtn.addActionListener(e -> frame.dispose());
+        exitBtn.addActionListener(e -> 
+            {frame.dispose();
+             new Login();});
 
         // Add buttons to panel
-        backgroundPanel.add(searchEmployeeBtn);
-        backgroundPanel.add(updateInfoBtn);
-        backgroundPanel.add(updateSalaryBtn);
-        backgroundPanel.add(viewReportBtn);
-        backgroundPanel.add(addEmployeeBtn);
-        backgroundPanel.add(exitBtn);
+        backgroundPanel.add(wrapButton(searchEmployeeBtn));
+        backgroundPanel.add(wrapButton(updateInfoBtn));
+        backgroundPanel.add(wrapButton(updateSalaryBtn));
+        backgroundPanel.add(wrapButton(viewReportBtn));
+        backgroundPanel.add(wrapButton(addEmployeeBtn));
+        backgroundPanel.add(wrapButton(exitBtn));
 
         frame.setContentPane(backgroundPanel);
         frame.setVisible(true);
@@ -68,8 +69,16 @@ public class AdminPage {
         button.setForeground(fgColor);
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(200, 30));
         return button;
     }
+    private JPanel wrapButton(JButton button) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel.setOpaque(false); // Transparent panel to not cover background
+        panel.add(button);
+        return panel;
+    }
+    
 
     public void openSearchEmployeePage() {
         new SearchUI();
@@ -91,7 +100,7 @@ public class AdminPage {
         new AddEmployeeUI();
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         new AdminPage();
-    }
+    }*/
 }

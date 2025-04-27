@@ -2,121 +2,170 @@ package com.assemblers.app.UI;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
 import com.assemblers.app.APIController.Report;
 import com.assemblers.app.DatabaseAccess.ReportDAO;
 import com.assemblers.app.Models.EmployeePayInfo;
-import java.util.List;
 import java.awt.*;
+import java.util.List;
 
 public class ReportUI {
     private JFrame frame;
 
     public ReportUI() {
         frame = new JFrame("Reports");
-        frame.setSize(750, 220); // Wider to accommodate new dropdowns
+        frame.setSize(750, 300);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLayout(new GridLayout(3, 1, 10, 10));
         frame.setLocationRelativeTo(null);
-    
-        // Division options
-        String[] divisionNames = {
-            "Technology Engineering", "Marketing", "Human Resources", "HQ"
+
+        // Create background panel
+        JPanel backgroundPanel = new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    Image backgroundImage = new ImageIcon(getClass().getResource("/background.png")).getImage();
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         };
-        int[] divisionIds = {123, 345, 456, 567};
-    
-        // Job title options
-        String[] jobTitleNames = {
+        backgroundPanel.setLayout(null);
+        frame.setContentPane(backgroundPanel);
+
+        // Common style settings
+        Font labelFont = new Font("Monospaced", Font.PLAIN, 14);
+        Font buttonFont = new Font("Monospaced", Font.PLAIN, 12);
+        Color buttonColor = new Color(70, 130, 180); // Steel blue
+
+        // Division Panel
+        JLabel divisionLabel = new JLabel("Division:");
+        divisionLabel.setFont(labelFont);
+        divisionLabel.setForeground(Color.WHITE);
+        divisionLabel.setBounds(30, 20, 100, 25);
+
+        JComboBox<String> divisionDropdown = createStyledComboBox(new String[]{
+            "Technology Engineering", "Marketing", "Human Resources", "HQ"
+        });
+        divisionDropdown.setBounds(140, 20, 200, 25);
+
+        JLabel divisionMonthLabel = new JLabel("Month:");
+        divisionMonthLabel.setFont(labelFont);
+        divisionMonthLabel.setForeground(Color.WHITE);
+        divisionMonthLabel.setBounds(370, 20, 100, 25);
+
+        JComboBox<String> divisionMonthDropdown = createStyledComboBox(new String[]{
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        });
+        divisionMonthDropdown.setBounds(450, 20, 200, 25);
+
+        JButton divisionBtn = createStyledButton("View Total Pay by Division");
+        divisionBtn.setBounds(250, 60, 220, 30);
+
+        // Job Title Panel
+        JLabel jobTitleLabel = new JLabel("Job Title:");
+        jobTitleLabel.setFont(labelFont);
+        jobTitleLabel.setForeground(Color.WHITE);
+        jobTitleLabel.setBounds(30, 110, 100, 25);
+
+        JComboBox<String> jobTitleDropdown = createStyledComboBox(new String[]{
             "Software Manager", "Software Architect", "Software Engineer", "Software Developer",
             "Marketing Manager", "Marketing Associate", "Marketing Assistant",
             "HR Manager", "HR Analyst",
             "Chief Executive Officer", "Chief Financial Officer", "Chief Information Officer"
-        };
-        int[] jobTitleIds = {
-            100, 101, 102, 103,
-            200, 201, 202,
-            300, 301,
-            900, 901, 902
-        };
-    
-        String[] months = {
+        });
+        jobTitleDropdown.setBounds(140, 110, 200, 25);
+
+        JLabel jobTitleMonthLabel = new JLabel("Month:");
+        jobTitleMonthLabel.setFont(labelFont);
+        jobTitleMonthLabel.setForeground(Color.WHITE);
+        jobTitleMonthLabel.setBounds(370, 110, 100, 25);
+
+        JComboBox<String> jobTitleMonthDropdown = createStyledComboBox(new String[]{
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
-        };
-    
-        // Division Panel
-        JPanel divisionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        JLabel divisionLabel = new JLabel("Division:");
-        JComboBox<String> divisionDropdown = new JComboBox<>(divisionNames);
-        JLabel divisionMonthLabel = new JLabel("Month:");
-        JComboBox<String> divisionMonthDropdown = new JComboBox<>(months);
-        JButton divisionBtn = new JButton("View Total Pay by Division");
-        divisionPanel.add(divisionLabel);
-        divisionPanel.add(divisionDropdown);
-        divisionPanel.add(divisionMonthLabel);
-        divisionPanel.add(divisionMonthDropdown);
-        divisionPanel.add(divisionBtn);
-    
-        // Job Title Panel
-        JPanel jobTitlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        JLabel jobTitleLabel = new JLabel("Job Title:");
-        JComboBox<String> jobTitleDropdown = new JComboBox<>(jobTitleNames);
-        JLabel jobTitleMonthLabel = new JLabel("Month:");
-        JComboBox<String> jobTitleMonthDropdown = new JComboBox<>(months);
-        JButton jobTitleBtn = new JButton("View Total Pay by Job Title");
-        jobTitlePanel.add(jobTitleLabel);
-        jobTitlePanel.add(jobTitleDropdown);
-        jobTitlePanel.add(jobTitleMonthLabel);
-        jobTitlePanel.add(jobTitleMonthDropdown);
-        jobTitlePanel.add(jobTitleBtn);
-    
-        // All Info Panel
-        JPanel allInfoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        JButton allPayInfoBtn = new JButton("View All Employee Pay Info");
-        allPayInfoBtn.setPreferredSize(new Dimension(250, 30));
-        allInfoPanel.add(allPayInfoBtn);
-    
-        // Add to frame
-        frame.add(divisionPanel);
-        frame.add(jobTitlePanel);
-        frame.add(allInfoPanel);
-    
+        });
+        jobTitleMonthDropdown.setBounds(450, 110, 200, 25);
+
+        JButton jobTitleBtn = createStyledButton("View Total Pay by Job Title");
+        jobTitleBtn.setBounds(250, 150, 220, 30);
+
+        // All Info Button
+        JButton allPayInfoBtn = createStyledButton("View All Employee Pay Info");
+        allPayInfoBtn.setBounds(200, 200, 300, 40);
+
+        // Add components to backgroundPanel
+        backgroundPanel.add(divisionLabel);
+        backgroundPanel.add(divisionDropdown);
+        backgroundPanel.add(divisionMonthLabel);
+        backgroundPanel.add(divisionMonthDropdown);
+        backgroundPanel.add(divisionBtn);
+
+        backgroundPanel.add(jobTitleLabel);
+        backgroundPanel.add(jobTitleDropdown);
+        backgroundPanel.add(jobTitleMonthLabel);
+        backgroundPanel.add(jobTitleMonthDropdown);
+        backgroundPanel.add(jobTitleBtn);
+
+        backgroundPanel.add(allPayInfoBtn);
+
+        // Division and Job Title IDs
+        int[] divisionIds = {123, 345, 456, 567};
+        int[] jobTitleIds = {100, 101, 102, 103, 200, 201, 202, 300, 301, 900, 901, 902};
+
         // Button actions
         divisionBtn.addActionListener(e -> {
             int selectedIndex = divisionDropdown.getSelectedIndex();
             int divisionId = divisionIds[selectedIndex];
             String selectedMonth = (String) divisionMonthDropdown.getSelectedItem();
-            viewTotalPayByDivision(divisionId, selectedMonth); // ✅ updated
+            viewTotalPayByDivision(divisionId, selectedMonth);
         });
-    
+
         jobTitleBtn.addActionListener(e -> {
             int selectedIndex = jobTitleDropdown.getSelectedIndex();
             int jobTitleId = jobTitleIds[selectedIndex];
             String selectedMonth = (String) jobTitleMonthDropdown.getSelectedItem();
-            viewTotalPayByJobtitles(jobTitleId,selectedMonth); // You can update to pass selectedMonth later
+            viewTotalPayByJobtitles(jobTitleId, selectedMonth);
         });
-    
+
         allPayInfoBtn.addActionListener(e -> viewAllEmployeePayInfo());
-    
+
         frame.setVisible(true);
     }
-    
+
+    private JComboBox<String> createStyledComboBox(String[] options) {
+        JComboBox<String> comboBox = new JComboBox<>(options);
+        comboBox.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        comboBox.setBackground(new Color(255, 255, 255, 200)); // Semi-transparent white
+        comboBox.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
+        return comboBox;
+    }
+
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        button.setBackground(new Color(70, 130, 180)); // Steel blue
+        button.setForeground(Color.BLACK);
+        button.setFocusPainted(false);
+        return button;
+    }
+
     public void viewAllEmployeePayInfo() {
         List<EmployeePayInfo> employeePayInfoList = ReportDAO.getAllEmployeePayInfo();
-    
+
         if (employeePayInfoList == null || employeePayInfoList.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "No employee pay info found.");
             return;
         }
-    
+
         String[] columnNames = {
             "Emp ID", "First Name", "Last Name", "Pay Date", 
             "Earnings", "Fed Tax", "Fed Med", "Fed SS", 
             "State Tax", "Retire 401k", "Health Care"
         };
-    
+
         Object[][] data = new Object[employeePayInfoList.size()][columnNames.length];
-    
+
         for (int i = 0; i < employeePayInfoList.size(); i++) {
             EmployeePayInfo payInfo = employeePayInfoList.get(i);
             data[i][0] = payInfo.getEmpid();
@@ -131,55 +180,54 @@ public class ReportUI {
             data[i][9] = payInfo.getRetire_401K();
             data[i][10] = payInfo.getHealth_care();
         }
-    
+
         JTable table = new JTable(new DefaultTableModel(data, columnNames));
         JScrollPane scrollPane = new JScrollPane(table);
-    
-        // Create a dialog with a larger size
+
         JDialog dialog = new JDialog(frame, "All Employee Pay Info", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.getContentPane().add(scrollPane);
-        dialog.setSize(1000, 500); // Set width and height
-        dialog.setLocationRelativeTo(frame); // Center relative to main frame
+        dialog.setSize(1000, 500);
+        dialog.setLocationRelativeTo(frame);
         dialog.setVisible(true);
     }
+
     public void viewTotalPayByDivision(int division_id, String monthName) {
         int monthIndex = java.util.Arrays.asList(
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ).indexOf(monthName) + 1;
-    
+
         float totalPay = Report.getTotalPayByDivision(division_id, monthIndex);
-    
-        // Find the name of the division by matching the ID
-        String[] divisionNames = {
-            "Technology Engineering", "Marketing", "Human Resources", "HQ"
-        };
+
+        String[] divisionNames = {"Technology Engineering", "Marketing", "Human Resources", "HQ"};
         int[] divisionIds = {123, 345, 456, 567};
         String divisionName = "Unknown";
-    
+
         for (int i = 0; i < divisionIds.length; i++) {
             if (divisionIds[i] == division_id) {
                 divisionName = divisionNames[i];
                 break;
             }
         }
-    
-        JOptionPane.showMessageDialog(frame,
-            "The total pay for " + divisionName + " in " + monthName + " is $" + totalPay);
+
+        ImageIcon icon = new ImageIcon(getClass().getResource("/logo.png"));
+        JOptionPane.showMessageDialog(
+        frame,
+        "The total pay for " + divisionName + " in " + monthName + " is $" + totalPay,
+        "Total Pay", // Title
+        JOptionPane.INFORMATION_MESSAGE, // Message type
+        icon); // Icon
     }
-    
+
     public void viewTotalPayByJobtitles(int jobtitle_id, String monthName) {
-        // Convert the month name to the month index (1 for January, 2 for February, etc.)
         int monthIndex = java.util.Arrays.asList(
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ).indexOf(monthName) + 1;
-    
-        // Get the total pay for the selected job title and month
+
         float totalPay = Report.getTotalPayByJobtitle(jobtitle_id, monthIndex);
-    
-        // Find the job title by matching the ID
+
         String[] jobTitleNames = {
             "Software Manager", "Software Architect", "Software Engineer", "Software Developer",
             "Marketing Manager", "Marketing Associate", "Marketing Assistant",
@@ -193,23 +241,25 @@ public class ReportUI {
             900, 901, 902
         };
         String jobTitleName = "Unknown";
-    
-        // Match the job title ID to the name
+
         for (int i = 0; i < jobTitleIds.length; i++) {
             if (jobTitleIds[i] == jobtitle_id) {
                 jobTitleName = jobTitleNames[i];
                 break;
             }
         }
-    
-        // Show the total pay message
-        JOptionPane.showMessageDialog(frame,
-            "The total pay for " + jobTitleName + " in " + monthName + " is $" + totalPay);
-    }    
-    public static void main(String[] args) {
-        new ReportUI();
+        ImageIcon icon = new ImageIcon(getClass().getResource("/logo.png"));
+        JOptionPane.showMessageDialog(
+        frame,
+        "The total pay for " + jobTitleName + " in " + monthName + " is $" + totalPay,
+        "Total Pay", // Title
+        JOptionPane.INFORMATION_MESSAGE, // Message type
+        icon // Icon
+);
+
     }
+
+    /*public static void main(String[] args) {
+        new ReportUI();
+    }*/
 }
-
-
-

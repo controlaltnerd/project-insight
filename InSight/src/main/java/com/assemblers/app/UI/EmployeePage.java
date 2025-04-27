@@ -21,8 +21,7 @@ public class EmployeePage extends JFrame {
     private JTable reportings;
 
     public EmployeePage(int empId) {
-        // Panel Setup
-        setTitle("Login Form");
+        setTitle("Employee Page");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
