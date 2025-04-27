@@ -1,8 +1,11 @@
 package com.assemblers.app.UI;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
+import com.assemblers.app.APIController.EmployeeInfo;
 import com.assemblers.app.APIController.Report;
+import com.assemblers.app.Models.Employee;
 import com.assemblers.app.Models.EmployeePayInfo;
 
 import java.awt.*;
@@ -15,10 +18,10 @@ public class EmployeePage extends JFrame {
     private JButton viewInfo, toLogin;
     private int employeeID;
     private boolean isReport;
+    private JTable reportings;
 
     public EmployeePage(int empId) {
         // Panel Setup
-        //this.setLayout(new BorderLayout());
         setTitle("Login Form");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,9 +29,10 @@ public class EmployeePage extends JFrame {
         setLayout(new BorderLayout());
         Font empFont = new Font("Monospaced", Font.BOLD, 24);
         Color beige = new Color(37, 144, 232);
-
+        // Setting Private Variables
         employeeID = empId;
         isReport = false;
+        // Panel Creation
         empPanel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -40,6 +44,7 @@ public class EmployeePage extends JFrame {
                 }
             }
         };
+        // Makes the background of the panel visable
         empPanel.setOpaque(false);
 
         text = new JLabel("Welcome " + Report.getEmployeePayByEmpid(employeeID).get(0).getFname() + "!");
@@ -129,12 +134,12 @@ public class EmployeePage extends JFrame {
                 data[i][9] = r.getRetire_401K();
                 data[i][10] = r.getHealth_care();
             }
-            JTable reportings = new JTable(data, columnNames);
+            reportings = new JTable(data, columnNames);
             reportings.setEnabled(false);
             reportings.setRowHeight(25);
             JScrollPane reportScrollPane = new JScrollPane(reportings);
             reportScrollPane.setPreferredSize(new Dimension(empPanel.getWidth(), 25));
-            reportScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+            reportScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
 
             JButton closeRep = new JButton("Close Report");
 
@@ -145,11 +150,21 @@ public class EmployeePage extends JFrame {
                     closeDisplayWindow();
                 }
             });
+
+            JButton viewEmpInfo = new JButton("View Personal Info");
+            viewEmpInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
+            viewEmpInfo.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    openEmpInfo();
+                }
+            });
             
-            empPanel.add(Box.createVerticalStrut(20));
+            empPanel.add(Box.createVerticalStrut(10));
             empPanel.add(reportScrollPane, BorderLayout.CENTER);
-            empPanel.add(Box.createVerticalStrut(20));
+            empPanel.add(Box.createVerticalStrut(10));
             empPanel.add(closeRep, BorderLayout.CENTER);
+            empPanel.add(Box.createVerticalStrut(10));
+            empPanel.add(viewEmpInfo, BorderLayout.CENTER);
             empPanel.revalidate();
             empPanel.repaint();
             isReport = true;
@@ -164,12 +179,29 @@ public class EmployeePage extends JFrame {
             empPanel.remove(empPanel.getComponentCount() - 1);
             empPanel.remove(empPanel.getComponentCount() - 1);
             empPanel.remove(empPanel.getComponentCount() - 1);
+            empPanel.remove(empPanel.getComponentCount() - 1);
 
 
             empPanel.revalidate();
             empPanel.repaint();
             isReport = false;
         }
+    }
+
+    public void openEmpInfo()
+    {
+        System.out.println("flop");
+        String[] colNames = {"First Name", "Last Name", "Job Title", "Email", "Salary", "SSN"};   
+        Employee emp = EmployeeInfo.viewEmployeeInfoById(employeeID); 
+        Object [][] newData = new Object[1][colNames.length];
+        newData[0][0] = emp.getFname();
+        newData[0][1] = emp.getLname();
+        newData[0][2] = emp.getJob_title();
+        newData[0][3] = emp.getEmail();
+        newData[0][4] = emp.getSalary();
+        newData[0][5] = emp.getSsn();
+
+        reportings.setModel(new DefaultTableModel(newData, colNames));
     }
 
     public void gotoLogin()
