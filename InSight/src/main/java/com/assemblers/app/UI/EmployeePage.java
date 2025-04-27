@@ -22,7 +22,7 @@ public class EmployeePage extends JFrame {
 
     public EmployeePage(int empId) {
         setTitle("Employee Page");
-        setSize(600, 400);
+        setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -138,7 +138,7 @@ public class EmployeePage extends JFrame {
             reportings.setRowHeight(25);
             JScrollPane reportScrollPane = new JScrollPane(reportings);
             reportScrollPane.setPreferredSize(new Dimension(empPanel.getWidth(), 25));
-            reportScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+            reportScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
 
             JButton closeRep = new JButton("Close Report");
 
@@ -160,7 +160,7 @@ public class EmployeePage extends JFrame {
             
             empPanel.add(Box.createVerticalStrut(10));
             empPanel.add(reportScrollPane, BorderLayout.CENTER);
-            empPanel.add(Box.createVerticalStrut(10));
+            empPanel.add(Box.createVerticalStrut(35));
             empPanel.add(closeRep, BorderLayout.CENTER);
             empPanel.add(Box.createVerticalStrut(10));
             empPanel.add(viewEmpInfo, BorderLayout.CENTER);
