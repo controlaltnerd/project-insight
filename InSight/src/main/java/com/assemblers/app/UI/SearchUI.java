@@ -1,8 +1,27 @@
 package com.assemblers.app.UI;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import com.assemblers.app.APIController.EmployeeInfo;
 import com.assemblers.app.APIController.Report;
@@ -94,52 +113,97 @@ public class SearchUI {
     }
 
     private void handleSearch() {
-        String searchText = searchField.getText().trim();
+    String searchText = searchField.getText().trim();
 
-        if (searchText.isEmpty()) {
-            ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
-            JOptionPane.showMessageDialog(frame, "Please enter a search term.", "Warning", JOptionPane.WARNING_MESSAGE,customIcon);
-            return;
-        }
+    if (searchText.isEmpty()) {
+        ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+        JOptionPane.showMessageDialog(frame, "Please enter a search term.", "Warning", JOptionPane.WARNING_MESSAGE, customIcon);
+        return;
+    }
 
-        try {
-            if (isNumeric(searchText)) {
-                Employee employee = EmployeeInfo.viewEmployeeInfoById(Integer.parseInt(searchText));
-                if (employee != null) {
-                    showEmployeeInfo(employee);
+    try {
+        if (isNumeric(searchText)) {
+            Employee employee = EmployeeInfo.viewEmployeeInfoById(Integer.parseInt(searchText));
+            if (employee != null) {
+                showEmployeeInfo(employee);
+            } else {
+                ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
+                JOptionPane.showMessageDialog(frame, "No employee found with ID: " + searchText, "Error", JOptionPane.ERROR_MESSAGE, customIcon);
+            }
+        } else if (searchText.contains(" ")) {
+            String[] nameParts = searchText.trim().split("\\s+");
+            if (nameParts.length == 2) {
+                List<Employee> employees = EmployeeInfo.viewEmployeeInfoByFullName(nameParts[0], nameParts[1]);
+                if (!employees.isEmpty()) {
+                    showEmployeeSelectionDialog(employees);
                 } else {
                     ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
-                    JOptionPane.showMessageDialog(frame, "No employee found with ID: " + searchText, "Error", JOptionPane.ERROR_MESSAGE,customIcon);
-                }
-            } else if (searchText.contains(" ")) {
-                String[] nameParts = searchText.split(" ");
-                if (nameParts.length == 2) {
-                    Employee employee = EmployeeInfo.viewEmployeeInfoByName(nameParts[0], nameParts[1]);
-                    if (employee != null) {
-                        showEmployeeInfo(employee);
-                    } else {
-                        ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
-                        JOptionPane.showMessageDialog(frame, "No employee found with name: " + searchText, "Error", JOptionPane.ERROR_MESSAGE,customIcon);
-                    }
-                } else {
-                    ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
-                    JOptionPane.showMessageDialog(frame, "Please enter both first and last name.", "Warning", JOptionPane.WARNING_MESSAGE,customIcon);
+                    JOptionPane.showMessageDialog(frame, "No employee found with name: " + searchText, "Error", JOptionPane.ERROR_MESSAGE, customIcon);
                 }
             } else {
-                Employee employee = EmployeeInfo.viewEmployeeInfoBySsn(searchText);
-                if (employee != null) {
-                    showEmployeeInfo(employee);
-                } else {
-                    ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
-                    JOptionPane.showMessageDialog(frame, "No employee found with SSN: " + searchText, "Error", JOptionPane.ERROR_MESSAGE,customIcon);
-                }
+                ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+                JOptionPane.showMessageDialog(frame, "Please enter both first and last name.", "Warning", JOptionPane.WARNING_MESSAGE, customIcon);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
-            JOptionPane.showMessageDialog(frame, "An error occurred while searching.", "Error", JOptionPane.ERROR_MESSAGE,customIcon);
+        } else {
+            List<Employee> employees = EmployeeInfo.viewEmployeeInfoName(searchText);
+            if (!employees.isEmpty()) {
+                showEmployeeSelectionDialog(employees);
+            } else {
+                ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
+                JOptionPane.showMessageDialog(frame, "No employee found with name: " + searchText, "Error", JOptionPane.ERROR_MESSAGE, customIcon);
+            }
+        }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+        JOptionPane.showMessageDialog(frame, "An error occurred while searching.", "Error", JOptionPane.ERROR_MESSAGE, customIcon);
+    }
+}
+
+private void showWarning(String message) {
+    ImageIcon icon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+    JOptionPane.showMessageDialog(frame, message, "Warning", JOptionPane.WARNING_MESSAGE, icon);
+}
+
+private void showNotFound(String type, String value) {
+    ImageIcon icon = new ImageIcon(getClass().getResource("/404.jpeg"));
+    JOptionPane.showMessageDialog(frame, "No employee found with " + type + ": " + value, "Error", JOptionPane.ERROR_MESSAGE, icon);
+}
+
+private void showEmployeeSelectionDialog(List<Employee> employees) {
+    String[] options = new String[employees.size()];
+    for (int i = 0; i < employees.size(); i++) {
+        Employee e = employees.get(i);
+        options[i] = e.getEmpid() + " - " + e.getFname() + " " + e.getLname();
+    }
+
+    String selected = (String) JOptionPane.showInputDialog(
+        frame,
+        "Select an employee:",
+        "Employee List",
+        JOptionPane.PLAIN_MESSAGE,
+        new ImageIcon(getClass().getResource("/logo.png")),
+        options,
+        options[0]
+    );
+
+    if (selected != null) {
+        int selectedId = Integer.parseInt(selected.split(" - ")[0]);
+        Employee selectedEmployee = null;
+        for (Employee e : employees) {
+            if (e.getEmpid() == selectedId) {
+                selectedEmployee = e;
+                break;
+            }
+        }
+
+        if (selectedEmployee != null) {
+            showEmployeeInfo(selectedEmployee);
         }
     }
+}
+
+
 
     private boolean isNumeric(String str) {
         try {
