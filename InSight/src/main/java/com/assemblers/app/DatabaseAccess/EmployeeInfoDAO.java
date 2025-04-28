@@ -13,7 +13,7 @@ public class EmployeeInfoDAO {
                        "WHERE e.empid = ?";
         
         try (Connection conn = DatabaseAccessHelper.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+            PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, empId);
             ResultSet rs = stmt.executeQuery();
 
@@ -64,62 +64,105 @@ public class EmployeeInfoDAO {
     
     return employeeList;
 }
-public static Employee getEmployeeInfoBySsn(String ssn) {
+public static List <Employee> getEmployeeInfoBySsn(String ssn) {
     String query =  "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
                     "FROM employees e " +
                     "LEFT JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
                     "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id " +
                     "WHERE e.SSN = ?";
+    List<Employee> employeeList = new ArrayList<>();
     
     try (Connection conn = DatabaseAccessHelper.getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
         stmt.setString(1, ssn);
         ResultSet rs = stmt.executeQuery();
 
-        if (rs.next()) {
-            return new Employee(
-                rs.getInt("empid"),
-                rs.getString("Fname"),
-                rs.getString("Lname"),
-                rs.getString("job_title"),
-                rs.getString("email"),
-                rs.getDouble("Salary"),
-                rs.getString("SSN")
-            );
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return null;
+                
+    while (rs.next()) {
+        Employee employee = new Employee(
+        rs.getInt("empid"),
+        rs.getString("Fname"),
+        rs.getString("Lname"),
+        rs.getString("job_title"),
+        rs.getString("email"),
+        rs.getDouble("Salary"),
+        rs.getString("SSN")
+                            );
+    employeeList.add(employee);
+                        }
+        } 
+    catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    
+                    return employeeList;
 }
-public static Employee getEmployeeInfoByName(String Fname, String Lname) {
+public static List <Employee> getEmployeeInfoByFullName(String Fname, String Lname) {
     String query =  "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
                     "FROM employees e " +
                     "LEFT JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
                     "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id " +
                     "WHERE e.Fname = ? AND e.Lname = ?";
     
-    try (Connection conn = DatabaseAccessHelper.getConnection();
+                    List<Employee> employeeList = new ArrayList<>();
+    
+                    try (Connection conn = DatabaseAccessHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query)) {
         stmt.setString(1, Fname);
         stmt.setString(2, Lname);
         ResultSet rs = stmt.executeQuery();
 
-        if (rs.next()) {
-            return new Employee(
-                rs.getInt("empid"),
-                rs.getString("Fname"),
-                rs.getString("Lname"),
-                rs.getString("job_title"),
-                rs.getString("email"),
-                rs.getDouble("Salary"),
-                rs.getString("SSN")
-            );
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return null;
+                
+                        while (rs.next()) {
+                            Employee employee = new Employee(
+                                rs.getInt("empid"),
+                                rs.getString("Fname"),
+                                rs.getString("Lname"),
+                                rs.getString("job_title"),
+                                rs.getString("email"),
+                                rs.getDouble("Salary"),
+                                rs.getString("SSN")
+                            );
+                            employeeList.add(employee);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    
+                    return employeeList;
+}
+public static List <Employee> getEmployeeInfoByName(String name) {
+    String query =  "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
+                    "FROM employees e " +
+                    "LEFT JOIN employee_job_titles ejt ON e.empid = ejt.empid " +
+                    "LEFT JOIN job_titles jt ON ejt.job_title_id = jt.job_title_id " +
+                    "WHERE e.Fname = ? OR e.Lname = ?";
+    
+                    List<Employee> employeeList = new ArrayList<>();
+    
+                    try (Connection conn = DatabaseAccessHelper.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, name);
+        stmt.setString(2, name);
+        ResultSet rs = stmt.executeQuery();
+                
+                        while (rs.next()) {
+                            Employee employee = new Employee(
+                                rs.getInt("empid"),
+                                rs.getString("Fname"),
+                                rs.getString("Lname"),
+                                rs.getString("job_title"),
+                                rs.getString("email"),
+                                rs.getDouble("Salary"),
+                                rs.getString("SSN")
+                            );
+                            employeeList.add(employee);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    
+                    return employeeList;
 }
 /*public static Employee getEmployeeInfoByDOB(String DOB) {
     String query = "SELECT e.empid, e.Fname, e.Lname, jt.job_title, e.email, e.Salary, e.SSN " +
