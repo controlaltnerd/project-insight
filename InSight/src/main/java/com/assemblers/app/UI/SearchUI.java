@@ -111,8 +111,7 @@ public class SearchUI {
         button.setPreferredSize(new Dimension(140, 30));
         return button;
     }
-
-    private void handleSearch() {
+private void handleSearch() {
     String searchText = searchField.getText().trim();
 
     if (searchText.isEmpty()) {
@@ -123,34 +122,39 @@ public class SearchUI {
 
     try {
         if (isNumeric(searchText)) {
+            // ID search
             Employee employee = EmployeeInfo.viewEmployeeInfoById(Integer.parseInt(searchText));
             if (employee != null) {
                 showEmployeeInfo(employee);
             } else {
-                ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
-                JOptionPane.showMessageDialog(frame, "No employee found with ID: " + searchText, "Error", JOptionPane.ERROR_MESSAGE, customIcon);
+                showNotFound("ID", searchText);
             }
         } else if (searchText.contains(" ")) {
+            // Full name search
             String[] nameParts = searchText.trim().split("\\s+");
             if (nameParts.length == 2) {
                 List<Employee> employees = EmployeeInfo.viewEmployeeInfoByFullName(nameParts[0], nameParts[1]);
                 if (!employees.isEmpty()) {
                     showEmployeeSelectionDialog(employees);
                 } else {
-                    ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
-                    JOptionPane.showMessageDialog(frame, "No employee found with name: " + searchText, "Error", JOptionPane.ERROR_MESSAGE, customIcon);
+                    showNotFound("name", searchText);
                 }
             } else {
-                ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
-                JOptionPane.showMessageDialog(frame, "Please enter both first and last name.", "Warning", JOptionPane.WARNING_MESSAGE, customIcon);
+                showWarning("Please enter both first and last name.");
             }
         } else {
-            List<Employee> employees = EmployeeInfo.viewEmployeeInfoName(searchText);
-            if (!employees.isEmpty()) {
-                showEmployeeSelectionDialog(employees);
+            // Try as SSN
+            List<Employee> ssnMatches = EmployeeInfo.viewEmployeeInfoBySsn(searchText);
+            if (!ssnMatches.isEmpty()) {
+                showEmployeeSelectionDialog(ssnMatches);
             } else {
-                ImageIcon customIcon = new ImageIcon(getClass().getResource("/404.jpeg"));
-                JOptionPane.showMessageDialog(frame, "No employee found with name: " + searchText, "Error", JOptionPane.ERROR_MESSAGE, customIcon);
+                // If no SSN match, try as first or last name
+                List<Employee> employees = EmployeeInfo.viewEmployeeInfoName(searchText);
+                if (!employees.isEmpty()) {
+                    showEmployeeSelectionDialog(employees);
+                } else {
+                    showNotFound("name or SSN", searchText);
+                }
             }
         }
     } catch (Exception ex) {
