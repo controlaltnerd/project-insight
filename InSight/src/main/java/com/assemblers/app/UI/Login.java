@@ -33,17 +33,31 @@ public class Login extends JFrame {
         };
         panel.setLayout(null);
 
-        JLabel welcomeLabel = new JLabel("Welcome!");
-        welcomeLabel.setFont(new Font("Monospaced", Font.BOLD, 24));
-        welcomeLabel.setForeground(Color.WHITE);
-        welcomeLabel.setBounds(150, 180, 250, 30);
-        panel.add(welcomeLabel);
+        JPanel welcomePanel = new JPanel();
+        welcomePanel.setLayout(null);
+        welcomePanel.setBounds(55, 150, 300, 100); 
+        welcomePanel.setBackground(new Color(0, 0, 0, 200));
 
+        
+        welcomePanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+
+        // Welcome label
+        JLabel welcomeLabel = new JLabel("Welcome!");
+        welcomeLabel.setFont(new Font("Monospaced", Font.BOLD, 34));
+        welcomeLabel.setForeground(Color.WHITE);
+        welcomeLabel.setBounds(70, 20, 250, 30); // relative to the welcomePanel
+        welcomePanel.add(welcomeLabel);
+
+        
         JLabel instructionLabel = new JLabel("Sign in to continue");
         instructionLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
         instructionLabel.setForeground(Color.WHITE);
-        instructionLabel.setBounds(120, 210, 200, 20);
-        panel.add(instructionLabel);
+        instructionLabel.setBounds(70, 60, 200, 20);
+        welcomePanel.add(instructionLabel);
+
+        
+        panel.add(welcomePanel);
+
 
         usernameField = new JTextField();
         usernameField.setBounds(50, 320, 300, 40);
@@ -96,15 +110,12 @@ public class Login extends JFrame {
         panel.add(forgotPasswordLabel);
         forgotPasswordLabel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                // Load your custom icon (replace "path_to_icon.png" with your actual file path)
                 ImageIcon customIcon = new ImageIcon(getClass().getResource("/broccoli.png")); 
-        
-                // Show the dialog with the custom icon
                 JOptionPane.showMessageDialog(null, 
-                    "Too bad, eat more broccoli then...", 
+                    "Too bad, eat more broccoli then \ncontact HR for password reset!", 
                     "Forgot Password?", 
                     JOptionPane.INFORMATION_MESSAGE, 
-                    customIcon); // Set custom icon here
+                    customIcon);
             }
         });
         
@@ -117,6 +128,16 @@ public class Login extends JFrame {
         createAccountButton.setFocusPainted(false);
         createAccountButton.setFont(new Font("Monospaced", Font.PLAIN, 12));
         panel.add(createAccountButton);
+        createAccountButton.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                ImageIcon customIcon = new ImageIcon(getClass().getResource("/group.jpeg")); 
+                JOptionPane.showMessageDialog(null, 
+                    "We are working on it! In the mean time, eat more broccoli", 
+                    "Create Account", 
+                    JOptionPane.INFORMATION_MESSAGE, 
+                    customIcon);
+            }
+        });
         add(panel);
         setVisible(true);
         // Login button action
@@ -140,8 +161,19 @@ public class Login extends JFrame {
                 openEmployeePage(user.getEmpid());
             }
         } else {
+            messageLabel.setFont(new Font("Monospaced", Font.BOLD, 12));
+            messageLabel.setForeground(Color.RED);
             messageLabel.setText("Invalid username or password.");
-        }       
+
+            Timer timer = new Timer(3000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    messageLabel.setText("");
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+                }       
     }
     private void openAdminPage() {
         dispose();

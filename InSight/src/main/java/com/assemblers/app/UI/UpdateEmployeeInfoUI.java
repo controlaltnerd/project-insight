@@ -130,41 +130,54 @@ class ButtonEditor extends DefaultCellEditor {
         // Save action
         saveBtn.addActionListener(e -> {
             try {
-                // First: Check for empty fields
-                if (fnameField.getText().trim().isEmpty() ||
-                    lnameField.getText().trim().isEmpty() ||
-                    emailField.getText().trim().isEmpty() ||
-                    salaryField.getText().trim().isEmpty() ||
-                    ssnField.getText().trim().isEmpty()) {
-                    ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
-                    JOptionPane.showMessageDialog(dialog, "All fields must be filled out.", "Input Error", JOptionPane.ERROR_MESSAGE,customIcon);
-                    return; // stop the save operation
+                String fname = fnameField.getText().trim();
+                String lname = lnameField.getText().trim();
+                String email = emailField.getText().trim();
+                String salaryText = salaryField.getText().trim();
+                String ssn = ssnField.getText().trim();
+                String jobTitle = (String) jobTitleComboBox.getSelectedItem();
+        
+                ImageIcon errorIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+        
+                
+                if (fname.isEmpty() || lname.isEmpty() || email.isEmpty() || salaryText.isEmpty() || ssn.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, "All fields must be filled out.", "Input Error", JOptionPane.ERROR_MESSAGE, errorIcon);
+                    return;
                 }
         
-                int empId = Integer.parseInt(model.getValueAt(row, 0).toString());
-                double salary = Double.parseDouble(salaryField.getText());
-                String ssn = ssnField.getText();
-        
-                if (salary < 0) {
-                    throw new IllegalArgumentException("Salary cannot be negative.");
+                
+                double salary;
+                try {
+                    salary = Double.parseDouble(salaryText);
+                    if (salary < 0) {
+                        JOptionPane.showMessageDialog(dialog, "Salary cannot be negative.", "Input Error", JOptionPane.ERROR_MESSAGE, errorIcon);
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(dialog, "Salary must be a valid number.", "Input Error", JOptionPane.ERROR_MESSAGE, errorIcon);
+                    return;
                 }
         
+                
                 if (!ssn.matches("\\d{3}-\\d{2}-\\d{4}")) {
-                    throw new IllegalArgumentException("SSN must be in the format XXX-XX-XXXX.");
+                    JOptionPane.showMessageDialog(dialog, "SSN must be in the format XXX-XX-XXXX.", "Input Error", JOptionPane.ERROR_MESSAGE, errorIcon);
+                    return;
                 }
         
-                Employee updated = new Employee(
-                    empId,
-                    fnameField.getText(),
-                    lnameField.getText(),
-                    (String) jobTitleComboBox.getSelectedItem(),
-                    emailField.getText(),
-                    salary,
-                    ssn
-                );
+                
+                if (!email.matches("^[\\w.-]+@[\\w.-]+\\.\\w+$")) {
+                    JOptionPane.showMessageDialog(dialog, "Please enter a valid email address.", "Input Error", JOptionPane.ERROR_MESSAGE, errorIcon);
+                    return;
+                }
         
+                
+                int empId = Integer.parseInt(model.getValueAt(row, 0).toString());
+        
+                
+                Employee updated = new Employee(empId, fname, lname, jobTitle, email, salary, ssn);
+        
+                
                 int rowUpdates = UpdateEmployeeInfo.updateInfo(updated);
-        
                 if (rowUpdates > 0) {
                     model.setValueAt(updated.getFname(), row, 1);
                     model.setValueAt(updated.getLname(), row, 2);
@@ -172,20 +185,20 @@ class ButtonEditor extends DefaultCellEditor {
                     model.setValueAt(updated.getEmail(), row, 4);
                     model.setValueAt(updated.getSalary(), row, 5);
                     model.setValueAt(updated.getSsn(), row, 6);
-                    
-                    ImageIcon customIcon = new ImageIcon(getClass().getResource("/logo.png"));
-                    JOptionPane.showMessageDialog(dialog, "Employee Info Saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE, customIcon);
+        
+                    ImageIcon successIcon = new ImageIcon(getClass().getResource("/logo.png"));
+                    JOptionPane.showMessageDialog(dialog, "Employee Info Saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE, successIcon);
                 } else {
-                    JOptionPane.showMessageDialog(dialog, "Update failed. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(dialog, "Update failed. Please try again.", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);
                 }
-            } catch (NumberFormatException ex) {
-                ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
-                JOptionPane.showMessageDialog(dialog, "Salary must be a valid number.", "ERROR", JOptionPane.ERROR_MESSAGE, customIcon);
-            } catch (IllegalArgumentException ex) {
-                ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
-                JOptionPane.showMessageDialog(dialog, ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE, customIcon);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                ImageIcon errorIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+                JOptionPane.showMessageDialog(dialog, "An unexpected error occurred.", "System Error", JOptionPane.ERROR_MESSAGE, errorIcon);
             }
+            dialog.dispose();
         });
+        
         
     
         // Cancel action
@@ -199,7 +212,6 @@ class ButtonEditor extends DefaultCellEditor {
         dialog.setVisible(true);
     }
     
-    // Helper to create styled text fields
     private JTextField createStyledTextField(String text) {
         JTextField textField = new JTextField(text);
         textField.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -209,7 +221,6 @@ class ButtonEditor extends DefaultCellEditor {
         return textField;
     }
     
-    // Helper to create styled labels
     private JLabel createStyledLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Monospaced", Font.BOLD, 12));
@@ -217,7 +228,6 @@ class ButtonEditor extends DefaultCellEditor {
         return label;
     }
     
-    // Helper to create styled buttons
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -227,7 +237,6 @@ class ButtonEditor extends DefaultCellEditor {
         return button;
     }
     
-    // Helper to style combo box
     private void styleComboBox(JComboBox<String> comboBox) {
         comboBox.setFont(new Font("Monospaced", Font.PLAIN, 12));
         comboBox.setBackground(new Color(255, 255, 255, 200));

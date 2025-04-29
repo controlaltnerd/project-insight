@@ -12,7 +12,6 @@ public class AdminPage {
         frame.setSize(500, 400);
         frame.setLocationRelativeTo(null);
 
-        // Custom background panel
         JPanel backgroundPanel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -27,7 +26,6 @@ public class AdminPage {
         backgroundPanel.setLayout(new GridLayout(6, 1, 10, 10));
         backgroundPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40)); // Padding
 
-        // Reusing login style
         Font buttonFont = new Font("Monospaced", Font.PLAIN, 12);
         Color buttonBgColor = new Color(70, 130, 180); // Steel blue
         Color buttonFgColor = Color.BLACK;
@@ -74,7 +72,7 @@ public class AdminPage {
     }
     private JPanel wrapButton(JButton button) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel.setOpaque(false); // Transparent panel to not cover background
+        panel.setOpaque(false);
         panel.add(button);
         return panel;
     }

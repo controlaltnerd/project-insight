@@ -80,31 +80,77 @@ public class AddEmployeeUI {
 
         // Button actions
         saveBtn.addActionListener(e -> {
+            String empIdText = empIdField.getText().trim();
+            String fname = fnameField.getText().trim();
+            String lname = lnameField.getText().trim();
+            String email = emailField.getText().trim();
+            String salaryText = salaryField.getText().trim();
+            String ssn = ssnField.getText().trim();
+            String jobTitle = (String) jobTitleComboBox.getSelectedItem();
+        
+            
+            if (empIdText.isEmpty() || fname.isEmpty() || lname.isEmpty() || 
+                email.isEmpty() || salaryText.isEmpty() || ssn.isEmpty() || jobTitle == null) {
+                ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+                JOptionPane.showMessageDialog(frame, "All fields are required.", "Input Error", JOptionPane.WARNING_MESSAGE,customIcon);
+                return;
+            }
+        
+            
+            int empId;
             try {
-                int empId = Integer.parseInt(empIdField.getText().trim());
-                String fname = fnameField.getText().trim();
-                String lname = lnameField.getText().trim();
-                String email = emailField.getText().trim();
-                double salary = Double.parseDouble(salaryField.getText().trim());
-                String ssn = ssnField.getText().trim();
-                String jobTitle = (String) jobTitleComboBox.getSelectedItem();
-
+                empId = Integer.parseInt(empIdText);
+                if (empId <= 0) throw new NumberFormatException();
+            } catch (NumberFormatException ex) {
+                ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+                JOptionPane.showMessageDialog(frame, "Employee ID must be a positive number.", "Input Error", JOptionPane.WARNING_MESSAGE,customIcon);
+                return;
+            }
+        
+            
+            double salary;
+            try {
+                salary = Double.parseDouble(salaryText);
+                if (salary < 0) throw new NumberFormatException();
+            } catch (NumberFormatException ex) {
+                ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+                JOptionPane.showMessageDialog(frame, "Salary must be a valid positive number.", "Input Error", JOptionPane.WARNING_MESSAGE,customIcon);
+                return;
+            }
+        
+    
+            if (!email.matches("^[\\w.-]+@[\\w.-]+\\.\\w+$")) {
+                ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+                JOptionPane.showMessageDialog(frame, "Enter a valid email address.", "Input Error", JOptionPane.WARNING_MESSAGE,customIcon);
+                return;
+            }
+        
+            // Basic SSN format (optional, e.g. 9-digit check)
+            if (!ssn.matches("\\d{3}-\\d{2}-\\d{4}")) {
+                ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
+                JOptionPane.showMessageDialog(frame, "SSN must be in the format XXX-XX-XXXX", "Input Error", JOptionPane.WARNING_MESSAGE,customIcon);
+                return;
+            }
+        
+            
+            try {
                 Employee newEmp = new Employee(empId, fname, lname, jobTitle, email, salary, ssn);
-
                 int result = AddEmployee.addNewEmployee(newEmp);
                 if (result == 1) {
                     ImageIcon customIcon = new ImageIcon(getClass().getResource("/logo.png"));
                     JOptionPane.showMessageDialog(frame, "Employee added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE, customIcon);
+                    frame.dispose();
                 } else {
                     ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
                     JOptionPane.showMessageDialog(frame, "Employee ID exists", "Fail", JOptionPane.ERROR_MESSAGE, customIcon);
-                }                
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
                 ImageIcon customIcon = new ImageIcon(getClass().getResource("/ERROR.jpeg"));
-                JOptionPane.showMessageDialog(frame, "Invalid inputs. Please check your entries", "Fail", JOptionPane.INFORMATION_MESSAGE, customIcon);
+                JOptionPane.showMessageDialog(frame, "An unexpected error occurred.", "Fail", JOptionPane.ERROR_MESSAGE, customIcon);
             }
         });
+        
 
         cancelBtn.addActionListener(e -> frame.dispose());
 
