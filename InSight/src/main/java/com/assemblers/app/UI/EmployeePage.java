@@ -1,7 +1,7 @@
 package com.assemblers.app.UI;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+//import javax.swing.table.DefaultTableModel;
 
 import com.assemblers.app.APIController.EmployeeInfo;
 import com.assemblers.app.APIController.Report;
@@ -22,7 +22,7 @@ public class EmployeePage extends JFrame {
 
     public EmployeePage(int empId) {
         setTitle("Employee Page");
-        setSize(600, 500);
+        setSize(700, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -110,28 +110,42 @@ public class EmployeePage extends JFrame {
     {
         if (!isReport) {
             String[] columnNames = {
-                "EmpID", "First Name", "Last Name", "Pay Date", "Earnings", "Fed Tax", "Fed Med", "Fed SS",
+                "Pay Date", "Earnings", "Fed Tax", "Fed Med", "Fed SS",
                 "State Tax", "401k", "Healthcare"
-            };        
+            };    
+            
+            String[] colNames = {"First Name", "Last Name", "Job Title", "Email", "Salary", "SSN"};   
+            Employee emp = EmployeeInfo.viewEmployeeInfoById(employeeID); 
+            Object [][] newData = new Object[1][colNames.length];
+            newData[0][0] = emp.getFname();
+            newData[0][1] = emp.getLname();
+            newData[0][2] = emp.getJob_title();
+            newData[0][3] = emp.getEmail();
+            newData[0][4] = emp.getSalary();
+            newData[0][5] = emp.getSsn();
+
+            JTable personal = new JTable(newData, colNames);
+            JScrollPane personalPane = new JScrollPane(personal);
+            personalPane.setPreferredSize(new Dimension(empPanel.getWidth(), 25));
+            personalPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 
             Object[][] data = new Object[Report.getEmployeePayByEmpid(employeeID).size()][columnNames.length];
-
             //String rep = "";
             
             for (int i = 0; i < Report.getEmployeePayByEmpid(employeeID).size(); i++) 
             {
                 EmployeePayInfo r = Report.getEmployeePayByEmpid(employeeID).get(i);
-                data[i][0] = r.getEmpid();
-                data[i][1] = r.getFname();
-                data[i][2] = r.getLname();
-                data[i][3] = r.getPayDate();
-                data[i][4] = r.getEarning();
-                data[i][5] = r.getFed_tax();
-                data[i][6] = r.getFed_med();
-                data[i][7] = r.getFed_SS();
-                data[i][8] = r.getState_tax();
-                data[i][9] = r.getRetire_401K();
-                data[i][10] = r.getHealth_care();
+                // data[i][0] = r.getEmpid();
+                // data[i][1] = r.getFname();
+                // data[i][2] = r.getLname();
+                data[i][0] = r.getPayDate();
+                data[i][1] = r.getEarning();
+                data[i][2] = r.getFed_tax();
+                data[i][3] = r.getFed_med();
+                data[i][4] = r.getFed_SS();
+                data[i][5] = r.getState_tax();
+                data[i][6] = r.getRetire_401K();
+                data[i][7] = r.getHealth_care();
             }
             reportings = new JTable(data, columnNames);
             reportings.setEnabled(false);
@@ -149,21 +163,13 @@ public class EmployeePage extends JFrame {
                     closeDisplayWindow();
                 }
             });
-
-            JButton viewEmpInfo = new JButton("View Personal Info");
-            viewEmpInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
-            viewEmpInfo.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    openEmpInfo();
-                }
-            });
             
             empPanel.add(Box.createVerticalStrut(10));
+            empPanel.add(personalPane, BorderLayout.CENTER);
+            empPanel.add(Box.createVerticalStrut(30));
             empPanel.add(reportScrollPane, BorderLayout.CENTER);
-            empPanel.add(Box.createVerticalStrut(35));
-            empPanel.add(closeRep, BorderLayout.CENTER);
             empPanel.add(Box.createVerticalStrut(10));
-            empPanel.add(viewEmpInfo, BorderLayout.CENTER);
+            empPanel.add(closeRep, BorderLayout.CENTER);
             empPanel.revalidate();
             empPanel.repaint();
             isReport = true;
@@ -179,28 +185,13 @@ public class EmployeePage extends JFrame {
             empPanel.remove(empPanel.getComponentCount() - 1);
             empPanel.remove(empPanel.getComponentCount() - 1);
             empPanel.remove(empPanel.getComponentCount() - 1);
+            empPanel.remove(empPanel.getComponentCount() - 1);
 
 
             empPanel.revalidate();
             empPanel.repaint();
             isReport = false;
         }
-    }
-
-    public void openEmpInfo()
-    {
-        System.out.println("flop");
-        String[] colNames = {"First Name", "Last Name", "Job Title", "Email", "Salary", "SSN"};   
-        Employee emp = EmployeeInfo.viewEmployeeInfoById(employeeID); 
-        Object [][] newData = new Object[1][colNames.length];
-        newData[0][0] = emp.getFname();
-        newData[0][1] = emp.getLname();
-        newData[0][2] = emp.getJob_title();
-        newData[0][3] = emp.getEmail();
-        newData[0][4] = emp.getSalary();
-        newData[0][5] = emp.getSsn();
-
-        reportings.setModel(new DefaultTableModel(newData, colNames));
     }
 
     public void gotoLogin()
